@@ -2,12 +2,15 @@ version: '2'
 
 volumes:
   vol_wiki:
+  vol_nextcloud:
+  vol_nextcloud_db:
 
 services:
   html:
     container_name: docker_html
     build: html
     image: html
+    restart: always
 
   wiki:
     container_name: docker_wiki
@@ -15,9 +18,42 @@ services:
     image: wiki
     volumes:
       - vol_wiki:/var/dokuwiki-storage
+    restart: always
+
+  nextcloud-db:
+    container_name: nextcloud_db
+    image: mariadb
+    volumes:
+      - vol_nextcloud_db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=nextcloud
+      - MYSQL_PASSWORD=nextcloud
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+    restart: always
+
+  nextcloud:
+    container_name: nextcloud
+    image: nextcloud:fpm
+    links:
+      - nextcloud-db
+    volumes:
+      - vol_nextcloud:/var/www/html
+    restart: always
+
+  nextcloud-web:
+    container_name: docker_cloud
+    image: nginx
+    links:
+      - nextcloud
+    volumes:
+      - ./nextcloud/nginx.conf:/etc/nginx/nginx.conf:ro
+    volumes_from:
+      - nextcloud
+    restart: always
 
   proxy:
-    container_name: docker_proxy
+    container_name: proxy
     build: nginx-proxy
     image: proxy
     ports:
@@ -25,4 +61,5 @@ services:
     links:
       - html
       - wiki
+      - nextcloud-web
     restart: always
