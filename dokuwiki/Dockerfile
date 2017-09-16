@@ -3,12 +3,13 @@ FROM debian
 ENV HTML_PATH /usr/share/nginx/html
 ENV DOKU_VOL /var/dokuwiki-storage
 
-RUN apt update && apt install -y wget php7.0-fpm php7.0-xml nginx
-RUN sed -i -e "s|cgi.fix_pathinfo=1|cgi.fix_pathinfo=0|g" /etc/php/7.0/fpm/php.ini
+RUN apt update && apt install -y wget php7.0-fpm php7.0-xml nginx supervisor
 
-RUN rm -rf /etc/nginx/sites-enabled/*
-RUN rm -rf /etc/nginx/conf.d
-ADD nginx-conf.d /etc/nginx/conf.d
+RUN sed -i -e "s|cgi.fix_pathinfo=1|cgi.fix_pathinfo=0|g" /etc/php/7.0/fpm/php.ini && \
+    mkdir /run/php
+
+RUN rm -rf /etc/nginx/sites-enabled/* && \
+    rm -rf /etc/nginx/conf.d
 
 RUN rm -rf $HTML_PATH && \
     mkdir $HTML_PATH && \
@@ -34,7 +35,10 @@ RUN rm -rf $HTML_PATH && \
     mv $HTML_PATH/conf $DOKU_VOL/conf && \
     ln -s $DOKU_VOL/conf $HTML_PATH/conf
 
+ADD nginx-conf.d /etc/nginx/conf.d
+ADD supervisord.conf /etc/supervisord.conf
+
 EXPOSE 80
 VOLUME ["$DOKU_VOL"]
 
-CMD service php7.0-fpm start && nginx -g "daemon off;"
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
