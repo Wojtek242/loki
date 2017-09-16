@@ -4,13 +4,25 @@ volumes:
   vol_wiki:
   vol_nextcloud:
   vol_nextcloud_db:
+  vol_gitlab_config:
+  vol_gitlab_logs:
+  vol_gitlab_data:
 
 services:
+
+  # ---------------------------------------------------------------------------
+  # Static website served at wojciechkozlowski.eu
+  # ---------------------------------------------------------------------------
+
   html:
     container_name: docker_html
     build: html
     image: html
     restart: always
+
+  # ---------------------------------------------------------------------------
+  # DokuWiki installation available at wiki.wojciechkozlowski.eu
+  # ---------------------------------------------------------------------------
 
   wiki:
     container_name: docker_wiki
@@ -19,6 +31,10 @@ services:
     volumes:
       - vol_wiki:/var/dokuwiki-storage
     restart: always
+
+  # ---------------------------------------------------------------------------
+  # NextCloud installation available at cloud.wojciechkozlowski.eu
+  # ---------------------------------------------------------------------------
 
   nextcloud-db:
     container_name: nextcloud_db
@@ -32,8 +48,8 @@ services:
       - MYSQL_USER=nextcloud
     restart: always
 
-  nextcloud:
-    container_name: nextcloud
+  nextcloud-app:
+    container_name: nextcloud_app
     image: nextcloud:fpm
     links:
       - nextcloud-db
@@ -41,25 +57,48 @@ services:
       - vol_nextcloud:/var/www/html
     restart: always
 
-  nextcloud-web:
+  nextcloud:
     container_name: docker_cloud
     image: nginx
     links:
-      - nextcloud
+      - nextcloud-app
     volumes:
       - ./nextcloud/nginx.conf:/etc/nginx/nginx.conf:ro
     volumes_from:
-      - nextcloud
+      - nextcloud-app
     restart: always
+
+  # ---------------------------------------------------------------------------
+  # GitLab installation available at gitlab.wojciechkozlowski.eu
+  # ---------------------------------------------------------------------------
+
+  gitlab:
+    container_name: docker_gitlab
+    image: gitlab/gitlab-ce
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.wojciechkozlowski.eu'
+        # Add any other gitlab.rb configuration here, each on its own line
+    volumes:
+      - vol_gitlab_config:/etc/gitlab
+      - vol_gitlab_logs:/var/log/gitlab
+      - vol_gitlab_data:/var/opt/gitlab
+    restart: always
+
+  # ---------------------------------------------------------------------------
+  # Reverse proxy served by Nginx
+  # ---------------------------------------------------------------------------
 
   proxy:
     container_name: proxy
-    build: nginx-proxy
-    image: proxy
+    image: nginx
     ports:
       - 80:80
     links:
       - html
       - wiki
-      - nextcloud-web
+      - nextcloud
+      - gitlab
+    volumes:
+      - ./proxy/nginx-conf.d:/etc/nginx/conf.d
     restart: always
