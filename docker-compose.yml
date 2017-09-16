@@ -1,0 +1,28 @@
+version: '2'
+
+volumes:
+  vol_wiki:
+
+services:
+  html:
+    container_name: docker_html
+    build: html
+    image: html
+
+  wiki:
+    container_name: docker_wiki
+    build: dokuwiki
+    image: wiki
+    volumes:
+      - vol_wiki:/var/dokuwiki-storage
+
+  proxy:
+    container_name: docker_proxy
+    build: nginx-proxy
+    image: proxy
+    ports:
+      - 80:80
+    links:
+      - html
+      - wiki
+    restart: always
