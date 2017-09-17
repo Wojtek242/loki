@@ -8,6 +8,7 @@ volumes:
   vol_gitlab_logs:
   vol_gitlab_data:
   vol_letsencrypt:
+  vol_letsencrypt_html:
 
 services:
 
@@ -94,8 +95,7 @@ services:
 
   proxy:
     container_name: proxy
-    build: proxy
-    image: proxy
+    image: nginx
     ports:
       - 80:80
       - 443:443
@@ -108,4 +108,18 @@ services:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy/nginx-conf.d:/etc/nginx/conf.d:ro
       - vol_letsencrypt:/etc/letsencrypt
+      - vol_letsencrypt_html:/var/www/html
+    restart: always
+
+  # ---------------------------------------------------------------------------
+  # Certbot container running a cron job to renew certificates.
+  # ---------------------------------------------------------------------------
+
+  certbot:
+    container_name: certbot
+    build: certbot
+    image: certbot
+    volumes:
+      - vol_letsencrypt:/etc/letsencrypt
+      - vol_letsencrypt_html:/var/www/html
     restart: always
