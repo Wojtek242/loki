@@ -59,6 +59,14 @@ services:
       - vol_nextcloud:/var/www/html
     restart: always
 
+  nextcloud-cron:
+    container_name: nextcloud_cron
+    build: nextcloud/cron
+    image: nextcloud-cron
+    volumes_from:
+      - nextcloud-app
+    restart: always
+
   nextcloud:
     container_name: docker_cloud
     image: nginx
