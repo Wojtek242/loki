@@ -104,7 +104,8 @@ services:
 
   proxy:
     container_name: proxy
-    image: nginx
+    build: proxy
+    image: proxy
     ports:
       - 80:80
       - 443:443
