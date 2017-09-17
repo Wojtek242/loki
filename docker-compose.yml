@@ -84,7 +84,8 @@ services:
 
   gitlab:
     container_name: docker_gitlab
-    image: gitlab/gitlab-ce
+    build: gitlab
+    image: gitlab
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://gitlab.wojciechkozlowski.eu'
