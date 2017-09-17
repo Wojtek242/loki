@@ -91,7 +91,7 @@ services:
         external_url 'http://gitlab.wojciechkozlowski.eu'
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
-      - 22:2770
+      - '2770:22'
     volumes:
       - vol_gitlab_config:/etc/gitlab
       - vol_gitlab_logs:/var/log/gitlab
