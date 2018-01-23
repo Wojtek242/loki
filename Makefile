@@ -141,7 +141,7 @@ runner: runner-clean runner-build runner-push
 # -----------------------------------------------------------------------------
 
 clean-all:
-	docker-compose down && docker rmi $(shell docker images -q)
+	docker rmi $(shell docker images -q)
 
 clean-builds: html-clean wiki-clean nextcloud-cron-clean gitlab-clean proxy-clean certbot-clean runner-clean
 
