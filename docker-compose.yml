@@ -142,6 +142,7 @@ services:
 
   runner:
     container_name: gitlab_runner
+    build: runner
     image: runner
     volumes:
       - vol_etc_gitlab_runner:/etc/gitlab-runner
