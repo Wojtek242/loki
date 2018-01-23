@@ -9,6 +9,8 @@ volumes:
   vol_gitlab_data:
   vol_letsencrypt:
   vol_letsencrypt_html:
+  vol_etc_gitlab_runner:
+  vol_home_gitlab_runner:
 
 services:
 
@@ -132,4 +134,17 @@ services:
     volumes:
       - vol_letsencrypt:/etc/letsencrypt
       - vol_letsencrypt_html:/var/www/html
+    restart: always
+
+  # ---------------------------------------------------------------------------
+  # Gitlab runner for CI.
+  # ---------------------------------------------------------------------------
+
+  runner:
+    container_name: gitlab_runner
+    image: runner
+    volumes:
+      - vol_etc_gitlab_runner:/etc/gitlab-runner
+      - vol_home_gitlab_runner:/home/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: always
