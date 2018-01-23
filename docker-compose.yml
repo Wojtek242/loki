@@ -91,13 +91,18 @@ services:
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://gitlab.wojciechkozlowski.eu'
+        registry_external_url 'https://gitlab.wojciechkozlowski.eu:8443'
+        registry_nginx['ssl_certificate'] = "/etc/letsencrypt/live/wojciechkozlowski.eu/fullchain.pem"
+        registry_nginx['ssl_certificate_key'] = "/etc/letsencrypt/live/wojciechkozlowski.eu/privkey.pem"
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
       - '2770:22'
+      - '8443:8443'
     volumes:
       - vol_gitlab_config:/etc/gitlab
       - vol_gitlab_logs:/var/log/gitlab
       - vol_gitlab_data:/var/opt/gitlab
+      - vol_letsencrypt:/etc/letsencrypt
     restart: always
 
   # ---------------------------------------------------------------------------
