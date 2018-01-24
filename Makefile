@@ -1,4 +1,18 @@
 # -----------------------------------------------------------------------------
+# Install the service file.
+# -----------------------------------------------------------------------------
+
+install:
+	cp loki-server.service /lib/systemd/system/
+	systemctl daemon-reload
+	systemctl enable loki-server
+
+uninstall:
+	systemctl disable loki-server
+	rm /lib/systemd/system/loki-server.service
+	systemctl daemon-reload
+
+# -----------------------------------------------------------------------------
 # The container registry to use.
 # -----------------------------------------------------------------------------
 
