@@ -47,8 +47,9 @@ should be enough.
 Updating
 --------
 
-To update the images and restart run (``WARNING: THIS WILL REMOVE ALL UNUSED
-DOCKER IMAGES``)
+To update the images and restart run
+
+``WARNING: THIS WILL REMOVE ALL UNUSED DOCKER IMAGES``
 
 ::
 
