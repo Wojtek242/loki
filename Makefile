@@ -11,24 +11,6 @@ DOCKER_REGISTRY = gitlab.wojciechkozlowski.eu:8443/wojtek/loki
 default: all
 
 # -----------------------------------------------------------------------------
-# html
-# -----------------------------------------------------------------------------
-
-html-clean:
-	docker rmi $(DOCKER_REGISTRY)/html || /bin/true
-
-html-build:
-	docker-compose build html
-
-html-push:
-	docker-compose push html
-
-html-pull:
-	docker-compose pull html
-
-html: html-clean html-build html-push
-
-# -----------------------------------------------------------------------------
 # wiki
 # -----------------------------------------------------------------------------
 
@@ -63,24 +45,6 @@ nextcloud-cron-pull:
 	docker-compose pull nextcloud-cron
 
 nextcloud-cron: nextcloud-cron-clean nextcloud-cron-build nextcloud-cron-push
-
-# -----------------------------------------------------------------------------
-# gitlab
-# -----------------------------------------------------------------------------
-
-gitlab-clean:
-	docker rmi $(DOCKER_REGISTRY)/gitlab || /bin/true
-
-gitlab-build:
-	docker-compose build gitlab
-
-gitlab-push:
-	docker-compose push gitlab
-
-gitlab-pull:
-	docker-compose pull gitlab
-
-gitlab: gitlab-clean gitlab-build gitlab-push
 
 # -----------------------------------------------------------------------------
 # proxy
@@ -143,7 +107,7 @@ runner: runner-clean runner-build runner-push
 clean-all:
 	docker rmi $(shell docker images -q)
 
-clean-builds: html-clean wiki-clean nextcloud-cron-clean gitlab-clean proxy-clean certbot-clean runner-clean
+clean-builds: wiki-clean nextcloud-cron-clean proxy-clean certbot-clean runner-clean
 
 build-all:
 	docker-compose build
@@ -154,7 +118,7 @@ push-all:
 pull-all:
 	docker-compose pull
 
-pull-builds: html-pull wiki-pull nextcloud-cron-pull gitlab-pull proxy-pull certbot-pull runner-pull
+pull-builds: wiki-pull nextcloud-cron-pull proxy-pull certbot-pull runner-pull
 
 # -----------------------------------------------------------------------------
 # Clean - build - push

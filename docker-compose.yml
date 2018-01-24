@@ -20,8 +20,9 @@ services:
 
   html:
     container_name: docker_html
-    build: html
-    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/html
+    image: nginx
+    volumes:
+      - ./html/html-wojciechkozlowski.eu/:/usr/share/nginx/html/
     restart: always
 
   # ---------------------------------------------------------------------------
@@ -86,8 +87,7 @@ services:
 
   gitlab:
     container_name: docker_gitlab
-    build: gitlab
-    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/gitlab
+    image: gitlab/gitlab-ce
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://gitlab.wojciechkozlowski.eu'
@@ -103,6 +103,7 @@ services:
       - vol_gitlab_logs:/var/log/gitlab
       - vol_gitlab_data:/var/opt/gitlab
       - vol_letsencrypt:/etc/letsencrypt
+      - ./gitlab/ssh_config:/etc/ssh/ssh_config
     restart: always
 
   # ---------------------------------------------------------------------------
