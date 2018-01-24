@@ -105,7 +105,7 @@ runner: runner-clean runner-build runner-push
 # -----------------------------------------------------------------------------
 
 clean-all:
-	docker rmi $(shell docker images -q)
+	docker rmi $(shell docker images -q) || /bin/true
 
 clean-builds: wiki-clean nextcloud-cron-clean proxy-clean certbot-clean runner-clean
 
