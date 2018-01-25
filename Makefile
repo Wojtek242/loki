@@ -104,13 +104,13 @@ runner-clean:
 	docker rmi $(DOCKER_REGISTRY)/runner || /bin/true
 
 runner-build:
-	docker-compose build runner
+	docker-compose build runner-main
 
 runner-push:
-	docker-compose push runner
+	docker-compose push runner-main
 
 runner-pull:
-	docker-compose pull runner
+	docker-compose pull runner-main
 
 runner: runner-clean runner-build runner-push
 
