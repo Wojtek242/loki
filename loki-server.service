@@ -1,10 +1,9 @@
 [Unit]
 Description=Dockerised web server
-Require=docker.service
 After=docker.service
 
 [Service]
-WorkingDirectory=/root/Dockerfiles
+WorkingDirectory=/root/Loki
 Environment="COMPOSE_HTTP_TIMEOUT=300"
 ExecStart=/usr/bin/docker-compose up
 ExecStop=/usr/bin/docker-compose down

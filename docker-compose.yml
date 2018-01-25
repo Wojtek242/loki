@@ -1,16 +1,16 @@
 version: '2'
 
 volumes:
-  vol_wiki:
-  vol_nextcloud:
-  vol_nextcloud_db:
-  vol_gitlab_config:
-  vol_gitlab_logs:
-  vol_gitlab_data:
-  vol_letsencrypt:
-  vol_letsencrypt_html:
-  vol_etc_gitlab_runner:
-  vol_home_gitlab_runner:
+  wiki:
+  nextcloud:
+  nextcloud_db:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
+  letsencrypt:
+  letsencrypt_html:
+  runner_main_etc:
+  runner_main_home:
 
 services:
 
@@ -34,7 +34,7 @@ services:
     build: dokuwiki
     image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/wiki
     volumes:
-      - vol_wiki:/var/dokuwiki-storage
+      - wiki:/var/dokuwiki-storage
     restart: always
 
   # ---------------------------------------------------------------------------
@@ -45,7 +45,7 @@ services:
     container_name: nextcloud-db
     image: mariadb
     volumes:
-      - vol_nextcloud_db:/var/lib/mysql
+      - nextcloud_db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=nextcloud
       - MYSQL_PASSWORD=nextcloud
@@ -59,7 +59,7 @@ services:
     links:
       - nextcloud-db
     volumes:
-      - vol_nextcloud:/var/www/html
+      - nextcloud:/var/www/html
     restart: always
 
   nextcloud-cron:
@@ -99,10 +99,10 @@ services:
       - '2770:22'
       - '8443:8443'
     volumes:
-      - vol_gitlab_config:/etc/gitlab
-      - vol_gitlab_logs:/var/log/gitlab
-      - vol_gitlab_data:/var/opt/gitlab
-      - vol_letsencrypt:/etc/letsencrypt
+      - gitlab_config:/etc/gitlab
+      - gitlab_logs:/var/log/gitlab
+      - gitlab_data:/var/opt/gitlab
+      - letsencrypt:/etc/letsencrypt
       - ./gitlab/ssh_config:/etc/ssh/ssh_config
     restart: always
 
@@ -125,8 +125,8 @@ services:
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy/nginx-conf.d:/etc/nginx/conf.d:ro
-      - vol_letsencrypt:/etc/letsencrypt
-      - vol_letsencrypt_html:/var/www/html
+      - letsencrypt:/etc/letsencrypt
+      - letsencrypt_html:/var/www/html
     restart: always
 
   # ---------------------------------------------------------------------------
@@ -138,8 +138,8 @@ services:
     build: certbot
     image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/certbot
     volumes:
-      - vol_letsencrypt:/etc/letsencrypt
-      - vol_letsencrypt_html:/var/www/html
+      - letsencrypt:/etc/letsencrypt
+      - letsencrypt_html:/var/www/html
     restart: always
 
   # ---------------------------------------------------------------------------
@@ -151,7 +151,7 @@ services:
     build: runner
     image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner
     volumes:
-      - vol_etc_gitlab_runner:/etc/gitlab-runner
-      - vol_home_gitlab_runner:/home/gitlab-runner
+      - runner_main_etc:/etc/gitlab-runner
+      - runner_main_home:/home/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
