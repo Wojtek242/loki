@@ -148,8 +148,8 @@ services:
 
   runner-main:
     container_name: runner-main
-    build: runner
-    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner
+    build: runner/main
+    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner-main
     volumes:
       - runner_main_etc:/etc/gitlab-runner
       - runner_main_home:/home/gitlab-runner
@@ -164,8 +164,8 @@ services:
 
   runner-docker:
     container_name: runner-docker
-    build: runner
-    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner
+    build: runner/docker
+    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner-docker
     links:
       - docker-dind:docker
     restart: always

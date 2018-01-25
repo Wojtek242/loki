@@ -97,22 +97,80 @@ certbot-pull:
 certbot: certbot-clean certbot-build certbot-push
 
 # -----------------------------------------------------------------------------
-# runner
+# runners
 # -----------------------------------------------------------------------------
 
-runner-clean:
-	docker rmi $(DOCKER_REGISTRY)/runner || /bin/true
+# base ------------------------------------------------------------------------
 
-runner-build:
+runner-base-clean:
+	docker rmi $(DOCKER_REGISTRY)/runner-base || /bin/true
+
+runner-base-build:
+	docker build -f runner/Dockerfile \
+	-t $(DOCKER_REGISTRY)/runner-base \
+	./runner
+
+runner-base-push:
+	docker push $(DOCKER_REGISTRY)/runner-base
+
+runner-base-pull:
+	docker pull $(DOCKER_REGISTRY)/runner-base
+
+runner-base: runner-base-clean runner-base-build runner-base-push
+
+# main ------------------------------------------------------------------------
+
+runner-main-clean:
+	docker rmi $(DOCKER_REGISTRY)/runner-main || /bin/true
+
+runner-main-build: runner-base-build
 	docker-compose build runner-main
 
-runner-push:
+runner-main-push:
 	docker-compose push runner-main
 
-runner-pull:
+runner-main-pull:
 	docker-compose pull runner-main
 
-runner: runner-clean runner-build runner-push
+runner-main: runner-main-clean runner-main-build runner-main-push
+
+# docker ----------------------------------------------------------------------
+
+runner-docker-clean:
+	docker rmi $(DOCKER_REGISTRY)/runner-docker || /bin/true
+
+runner-docker-build: runner-base-build
+	docker-compose build runner-docker
+
+runner-docker-push:
+	docker-compose push runner-docker
+
+runner-docker-pull:
+	docker-compose pull runner-docker
+
+runner-docker: runner-docker-clean runner-docker-build runner-docker-push
+
+# collect ---------------------------------------------------------------------
+
+runners-clean: \
+	runner-base-clean \
+	runner-main-clean \
+	runner-docker-clean
+
+runners-build: \
+	runner-base-build \
+	runner-main-build \
+	runner-docker-build
+
+runners-push: \
+	runner-main-push \
+	runner-docker-push
+
+runners-pull: \
+	runner-main-pull \
+	runner-docker-pull
+
+runners: runners-clean runners-build runners-push
 
 # -----------------------------------------------------------------------------
 # Collect targets.
@@ -121,9 +179,16 @@ runner: runner-clean runner-build runner-push
 clean-all:
 	docker rmi $(shell docker images -q) || /bin/true
 
-clean-builds: wiki-clean nextcloud-cron-clean proxy-clean certbot-clean runner-clean
+clean-builds: \
+	wiki-clean \
+	nextcloud-cron-clean \
+	proxy-clean \
+	certbot-clean \
+	runner-base-clean \
+	runner-main-clean \
+	runner-docker-clean
 
-build-all:
+build-all: runner-base-build
 	docker-compose build
 
 push-all:
@@ -131,8 +196,6 @@ push-all:
 
 pull-all:
 	docker-compose pull
-
-pull-builds: wiki-pull nextcloud-cron-pull proxy-pull certbot-pull runner-pull
 
 # -----------------------------------------------------------------------------
 # Clean - build - push
