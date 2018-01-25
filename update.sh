@@ -20,12 +20,20 @@ echo -e "${CYAN}[${SCRIPT}] Pull updated images${NC}"
 make -C $DIRNAME pull-all
 
 # -----------------------------------------------------------------------------
-# Restart the containers.
+# Stop the containers.
 # -----------------------------------------------------------------------------
 
-echo -e "${CYAN}[${SCRIPT}] Restart the containers${NC}"
+echo -e "${CYAN}[${SCRIPT}] Stop the containers${NC}"
 
-service loki-server restart
+service loki-server stop
+
+# -----------------------------------------------------------------------------
+# Start the containers.
+# -----------------------------------------------------------------------------
+
+echo -e "${CYAN}[${SCRIPT}] Start the containers${NC}"
+
+service loki-server start
 
 # -----------------------------------------------------------------------------
 # Wait for containers to start.
