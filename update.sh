@@ -9,7 +9,7 @@ NC='\033[00m'
 SCRIPT=$(readlink -f $0)
 DIRNAME=$(dirname $SCRIPT)
 
-SLEEP_TIME=600
+SLEEP_TIME=300
 
 # -----------------------------------------------------------------------------
 # Pull updated images.
