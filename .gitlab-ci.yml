@@ -1,0 +1,11 @@
+after_script:
+  - make clean-all
+
+build:
+  only:
+    - schedules
+  tags:
+    - docker
+  script:
+    - docker login -u $USERNAME -p $PASSWORD gitlab.wojciechkozlowski.eu:8443
+    - make all
