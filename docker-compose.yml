@@ -143,10 +143,10 @@ services:
     restart: always
 
   # ---------------------------------------------------------------------------
-  # Gitlab runner for CI.
+  # Gitlab runners for CI.
   # ---------------------------------------------------------------------------
 
-  runner:
+  runner-main:
     container_name: runner-main
     build: runner
     image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner
@@ -154,4 +154,18 @@ services:
       - runner_main_etc:/etc/gitlab-runner
       - runner_main_home:/home/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+
+  docker-dind:
+    container_name: docker-dind
+    image: docker:dind
+    privileged: true
+    restart: always
+
+  runner-docker:
+    container_name: runner-docker
+    build: runner
+    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner
+    links:
+      - docker-dind:docker
     restart: always
