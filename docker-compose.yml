@@ -11,6 +11,8 @@ volumes:
   letsencrypt_html:
   runner_main_etc:
   runner_main_home:
+  runner_docker_etc:
+  runner_docker_home:
 
 services:
 
@@ -159,6 +161,8 @@ services:
   docker-dind:
     container_name: docker-dind
     image: docker:dind
+    volumes:
+      - ./runner/docker/hosts:/etc/hosts
     privileged: true
     restart: always
 
@@ -168,4 +172,7 @@ services:
     image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner-docker
     links:
       - docker-dind:docker
+    volumes:
+      - runner_docker_etc:/etc/gitlab-runner
+      - runner_docker_home:/home/gitlab-runner
     restart: always
