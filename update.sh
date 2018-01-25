@@ -25,7 +25,7 @@ make -C $DIRNAME pull-all
 
 echo -e "${CYAN}[${SCRIPT}] Restart the containers${NC}"
 
-COMPOSE_HTTP_TIMEOUT=300 service loki-server restart
+service loki-server restart
 
 # -----------------------------------------------------------------------------
 # Wait for containers to start.

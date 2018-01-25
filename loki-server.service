@@ -5,6 +5,7 @@ After=docker.service
 
 [Service]
 WorkingDirectory=/root/Dockerfiles
+Environment="COMPOSE_HTTP_TIMEOUT=300"
 ExecStart=/usr/bin/docker-compose up
 ExecStop=/usr/bin/docker-compose down
 Restart=always

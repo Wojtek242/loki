@@ -19,7 +19,7 @@ services:
   # ---------------------------------------------------------------------------
 
   html:
-    container_name: docker_html
+    container_name: html
     image: nginx
     volumes:
       - ./html/html-wojciechkozlowski.eu/:/usr/share/nginx/html/
@@ -30,7 +30,7 @@ services:
   # ---------------------------------------------------------------------------
 
   wiki:
-    container_name: docker_wiki
+    container_name: wiki
     build: dokuwiki
     image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/wiki
     volumes:
@@ -42,7 +42,7 @@ services:
   # ---------------------------------------------------------------------------
 
   nextcloud-db:
-    container_name: nextcloud_db
+    container_name: nextcloud-db
     image: mariadb
     volumes:
       - vol_nextcloud_db:/var/lib/mysql
@@ -54,7 +54,7 @@ services:
     restart: always
 
   nextcloud-app:
-    container_name: nextcloud_app
+    container_name: nextcloud-app
     image: nextcloud:fpm
     links:
       - nextcloud-db
@@ -63,7 +63,7 @@ services:
     restart: always
 
   nextcloud-cron:
-    container_name: nextcloud_cron
+    container_name: nextcloud-cron
     build: nextcloud/cron
     image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/nextcloud-cron
     volumes_from:
@@ -71,7 +71,7 @@ services:
     restart: always
 
   nextcloud:
-    container_name: docker_cloud
+    container_name: nextcloud
     image: nginx
     links:
       - nextcloud-app
@@ -86,7 +86,7 @@ services:
   # ---------------------------------------------------------------------------
 
   gitlab:
-    container_name: docker_gitlab
+    container_name: gitlab
     image: gitlab/gitlab-ce
     environment:
       GITLAB_OMNIBUS_CONFIG: |
@@ -147,7 +147,7 @@ services:
   # ---------------------------------------------------------------------------
 
   runner:
-    container_name: gitlab_runner
+    container_name: runner-main
     build: runner
     image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner
     volumes:
