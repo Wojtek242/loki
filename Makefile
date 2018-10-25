@@ -177,7 +177,8 @@ runners: runners-clean runners-build runners-push
 # -----------------------------------------------------------------------------
 
 clean-all:
-	docker rmi $(shell docker images -q) || /bin/true
+	yes | docker container prune
+	yes | docker image prune -a
 
 clean-builds: \
 	wiki-clean \
