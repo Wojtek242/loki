@@ -36,28 +36,9 @@ echo -e "${CYAN}[${SCRIPT}] Start the containers${NC}"
 service loki-server start
 
 # -----------------------------------------------------------------------------
-# Wait for containers to start.
+# Remove untagged images.
 # -----------------------------------------------------------------------------
 
-echo -e "${CYAN}[${SCRIPT}] Wait ${SLEEP_TIME}s for containers to start${NC}"
+echo -e "${CYAN}[${SCRIPT}] Remove untagged images${NC}"
 
-sleep $SLEEP_TIME
-
-# -----------------------------------------------------------------------------
-# Remove unused images.
-# -----------------------------------------------------------------------------
-
-ACTIVE=$(systemctl status loki-server.service | grep "active (running)" -c)
-
-if [[ $ACTIVE == 1 ]]
-then
-
-    echo -e "${CYAN}[${SCRIPT}] Remove unused images${NC}"
-
-    yes | docker image prune -a
-
-else
-
-    echo -e "${RED}[${SCRIPT}] Problem with service activation${NC}"
-
-fi
+yes | docker image prune
