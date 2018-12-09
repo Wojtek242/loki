@@ -160,7 +160,7 @@ services:
 
   docker-dind:
     container_name: docker-dind
-    image: docker:dind
+    image: docker:18.03.1-dind
     volumes:
       - ./runner/docker/hosts:/etc/hosts
     privileged: true
