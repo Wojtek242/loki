@@ -92,7 +92,9 @@ services:
     image: gitlab/gitlab-ce
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://gitlab.wojciechkozlowski.eu'
+        external_url 'https://gitlab.wojciechkozlowski.eu'
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
         registry_external_url 'https://gitlab.wojciechkozlowski.eu:8443'
         registry_nginx['ssl_certificate'] = "/etc/letsencrypt/live/wojciechkozlowski.eu/fullchain.pem"
         registry_nginx['ssl_certificate_key'] = "/etc/letsencrypt/live/wojciechkozlowski.eu/privkey.pem"
