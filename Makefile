@@ -16,7 +16,7 @@ uninstall:
 # The container registry to use.
 # -----------------------------------------------------------------------------
 
-DOCKER_REGISTRY = gitlab.wojciechkozlowski.eu:8443/wojtek/loki
+DOCKER_REGISTRY = registry.wojciechkozlowski.eu/wojtek/loki
 
 # -----------------------------------------------------------------------------
 # Default target.

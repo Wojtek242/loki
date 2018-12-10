@@ -34,7 +34,7 @@ services:
   wiki:
     container_name: wiki
     build: dokuwiki
-    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/wiki
+    image: registry.wojciechkozlowski.eu/wojtek/loki/wiki
     volumes:
       - wiki:/var/dokuwiki-storage
     restart: always
@@ -67,7 +67,7 @@ services:
   nextcloud-cron:
     container_name: nextcloud-cron
     build: nextcloud/cron
-    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/nextcloud-cron
+    image: registry.wojciechkozlowski.eu/wojtek/loki/nextcloud-cron
     volumes_from:
       - nextcloud-app
     restart: always
@@ -95,18 +95,16 @@ services:
         external_url 'https://gitlab.wojciechkozlowski.eu'
         nginx['listen_port'] = 80
         nginx['listen_https'] = false
-        registry_external_url 'https://gitlab.wojciechkozlowski.eu:8443'
-        registry_nginx['ssl_certificate'] = "/etc/letsencrypt/live/wojciechkozlowski.eu/fullchain.pem"
-        registry_nginx['ssl_certificate_key'] = "/etc/letsencrypt/live/wojciechkozlowski.eu/privkey.pem"
+        registry_external_url 'https://registry.wojciechkozlowski.eu'
+        registry_nginx['listen_port'] = 80
+        registry_nginx['listen_https'] = false
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
       - '2770:22'
-      - '8443:8443'
     volumes:
       - gitlab_config:/etc/gitlab
       - gitlab_logs:/var/log/gitlab
       - gitlab_data:/var/opt/gitlab
-      - letsencrypt:/etc/letsencrypt
       - ./gitlab/ssh_config:/etc/ssh/ssh_config
     restart: always
 
@@ -117,7 +115,7 @@ services:
   proxy:
     container_name: proxy
     build: proxy
-    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/proxy
+    image: registry.wojciechkozlowski.eu/wojtek/loki/proxy
     ports:
       - 80:80
       - 443:443
@@ -140,7 +138,7 @@ services:
   certbot:
     container_name: certbot
     build: certbot
-    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/certbot
+    image: registry.wojciechkozlowski.eu/wojtek/loki/certbot
     volumes:
       - letsencrypt:/etc/letsencrypt
       - letsencrypt_html:/var/www/html
@@ -153,7 +151,7 @@ services:
   runner-main:
     container_name: runner-main
     build: runner/main
-    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner-main
+    image: registry.wojciechkozlowski.eu/wojtek/loki/runner-main
     volumes:
       - runner_main_etc:/etc/gitlab-runner
       - runner_main_home:/home/gitlab-runner
@@ -162,7 +160,7 @@ services:
 
   docker-dind:
     container_name: docker-dind
-    image: docker:18.03.1-dind
+    image: docker:dind
     volumes:
       - ./runner/docker/hosts:/etc/hosts
     privileged: true
@@ -171,7 +169,7 @@ services:
   runner-docker:
     container_name: runner-docker
     build: runner/docker
-    image: gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner-docker
+    image: registry.wojciechkozlowski.eu/wojtek/loki/runner-docker
     links:
       - docker-dind:docker
     volumes:

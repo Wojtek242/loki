@@ -7,5 +7,5 @@ build:
   tags:
     - docker
   script:
-    - docker login -u $USERNAME -p $PASSWORD gitlab.wojciechkozlowski.eu:8443
+    - docker login -u $USERNAME -p $PASSWORD registry.wojciechkozlowski.eu
     - make all

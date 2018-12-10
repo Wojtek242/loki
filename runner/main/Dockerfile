@@ -1,4 +1,4 @@
-FROM gitlab.wojciechkozlowski.eu:8443/wojtek/loki/runner-base
+FROM registry.wojciechkozlowski.eu/wojtek/loki/runner-base
 
 RUN apt install -y build-essential \
                    python3 \
