@@ -49,8 +49,13 @@ Updating
 
 To update the images and restart run
 
-``WARNING: THIS WILL REMOVE ALL UNUSED DOCKER IMAGES``
+``WARNING: THIS WILL REMOVE ALL DANGLING DOCKER IMAGES``
 
 ::
 
    ./update.sh
+
+A dangling image is one that does not have a tag, i.e., it is listed with a
+``<none>`` tag. The update pulls new versions of the images being used so all
+old images will now be left untagged and thus removed. However, if you have
+other untagged images, this will remove them as well.
