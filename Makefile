@@ -25,33 +25,13 @@ DOCKER_REGISTRY = registry.wojciechkozlowski.eu/wojtek/loki
 default: all
 
 # -----------------------------------------------------------------------------
-# base
-# -----------------------------------------------------------------------------
-
-base-clean:
-	docker rmi $(DOCKER_REGISTRY)/base || /bin/true
-
-base-build:
-	docker build -f base/Dockerfile \
-	-t $(DOCKER_REGISTRY)/base \
-	./base
-
-base-push:
-	docker push $(DOCKER_REGISTRY)/base
-
-base-pull:
-	docker pull $(DOCKER_REGISTRY)/base
-
-base: base-clean base-build base-push
-
-# -----------------------------------------------------------------------------
 # wiki
 # -----------------------------------------------------------------------------
 
 wiki-clean:
 	docker rmi $(DOCKER_REGISTRY)/wiki || /bin/true
 
-wiki-build: base-build
+wiki-build:
 	docker-compose build wiki
 
 wiki-push:
@@ -105,7 +85,7 @@ proxy: proxy-clean proxy-build proxy-push
 certbot-clean:
 	docker rmi $(DOCKER_REGISTRY)/certbot || /bin/true
 
-certbot-build: base-build
+certbot-build:
 	docker-compose build certbot
 
 certbot-push:
@@ -125,7 +105,7 @@ certbot: certbot-clean certbot-build certbot-push
 runner-base-clean:
 	docker rmi $(DOCKER_REGISTRY)/runner-base || /bin/true
 
-runner-base-build: base-build
+runner-base-build:
 	docker build -f runner/Dockerfile \
 	-t $(DOCKER_REGISTRY)/runner-base \
 	./runner
@@ -201,7 +181,6 @@ clean-all:
 	docker image prune -a -f
 
 clean-builds: \
-	base-clean \
 	wiki-clean \
 	nextcloud-cron-clean \
 	proxy-clean \
@@ -210,7 +189,7 @@ clean-builds: \
 	runner-main-clean \
 	runner-docker-clean
 
-build-all: base-build runner-base-build
+build-all: runner-base-build
 	docker-compose build
 
 push-all:

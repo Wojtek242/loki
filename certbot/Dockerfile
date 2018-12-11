@@ -1,6 +1,12 @@
-FROM registry.wojciechkozlowski.eu/wojtek/loki/base
+FROM debian:stable-slim
 
-RUN apt-get -y install certbot cron supervisor
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get -y upgrade
+
+RUN apt-get -y install \
+        certbot \
+        cron \
+        supervisor
 
 ADD certbot.cron /etc/cron.d/certbot
 

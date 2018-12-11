@@ -1,4 +1,7 @@
-FROM registry.wojciechkozlowski.eu/wojtek/loki/base
+FROM debian:stable-slim
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get -y upgrade
 
 # Add files to setup GitLab repo
 ADD script.deb.sh /tmp/script.deb.sh
