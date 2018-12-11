@@ -57,19 +57,12 @@ services:
 
   nextcloud-app:
     container_name: nextcloud-app
-    image: nextcloud:fpm
+    build: nextcloud
+    image: registry.wojciechkozlowski.eu/wojtek/loki/nextcloud
     links:
       - nextcloud-db
     volumes:
       - nextcloud:/var/www/html
-    restart: always
-
-  nextcloud-cron:
-    container_name: nextcloud-cron
-    build: nextcloud/cron
-    image: registry.wojciechkozlowski.eu/wojtek/loki/nextcloud-cron
-    volumes_from:
-      - nextcloud-app
     restart: always
 
   nextcloud:

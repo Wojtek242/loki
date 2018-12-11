@@ -43,22 +43,22 @@ wiki-pull:
 wiki: wiki-clean wiki-build wiki-push
 
 # -----------------------------------------------------------------------------
-# nextcloud-cron
+# nextcloud
 # -----------------------------------------------------------------------------
 
-nextcloud-cron-clean:
-	docker rmi $(DOCKER_REGISTRY)/nextcloud-cron || /bin/true
+nextcloud-clean:
+	docker rmi $(DOCKER_REGISTRY)/nextcloud || /bin/true
 
-nextcloud-cron-build:
-	docker-compose build nextcloud-cron
+nextcloud-build:
+	docker-compose build nextcloud-app
 
-nextcloud-cron-push:
-	docker-compose push nextcloud-cron
+nextcloud-push:
+	docker-compose push nextcloud-app
 
-nextcloud-cron-pull:
-	docker-compose pull nextcloud-cron
+nextcloud-pull:
+	docker-compose pull nextcloud-app
 
-nextcloud-cron: nextcloud-cron-clean nextcloud-cron-build nextcloud-cron-push
+nextcloud: nextcloud-clean nextcloud-build nextcloud-push
 
 # -----------------------------------------------------------------------------
 # proxy
@@ -182,7 +182,7 @@ clean-all:
 
 clean-builds: \
 	wiki-clean \
-	nextcloud-cron-clean \
+	nextcloud-clean \
 	proxy-clean \
 	certbot-clean \
 	runner-base-clean \
