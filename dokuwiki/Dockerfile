@@ -1,9 +1,9 @@
-FROM debian
+FROM registry.wojciechkozlowski.eu/wojtek/loki/base
 
 ENV HTML_PATH /usr/share/nginx/html
 ENV DOKU_VOL /var/dokuwiki-storage
 
-RUN apt update && apt install -y wget php7.0-fpm php7.0-xml nginx supervisor
+RUN apt-get -y install wget php7.0-fpm php7.0-xml nginx supervisor
 
 RUN sed -i -e "s|cgi.fix_pathinfo=1|cgi.fix_pathinfo=0|g" /etc/php/7.0/fpm/php.ini && \
     mkdir /run/php

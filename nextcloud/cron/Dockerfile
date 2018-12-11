@@ -1,6 +1,6 @@
 FROM nextcloud:fpm
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get -y upgrade && apt-get -y install \
   supervisor \
   cron \
   && rm -rf /var/lib/apt/lists/*

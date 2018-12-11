@@ -1,6 +1,6 @@
-FROM debian
+FROM registry.wojciechkozlowski.eu/wojtek/loki/base
 
-RUN apt update && apt install -y certbot cron supervisor
+RUN apt-get -y install certbot cron supervisor
 
 ADD certbot.cron /etc/cron.d/certbot
 

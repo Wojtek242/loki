@@ -1,10 +1,11 @@
 FROM registry.wojciechkozlowski.eu/wojtek/loki/runner-base
 
-RUN apt install -y apt-transport-https \
-                   ca-certificates \
-                   curl \
-                   gnupg2 \
-                   software-properties-common
+RUN apt-get -y install \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg2 \
+        software-properties-common
 
 RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add -
 
@@ -13,6 +14,6 @@ RUN add-apt-repository \
     $(lsb_release -cs) \
     stable"
 
-RUN apt update && apt install -y docker-ce docker-compose
+RUN apt-get update && apt-get -y install docker-ce docker-compose
 
 ENV DOCKER_HOST "tcp://docker:2375"
