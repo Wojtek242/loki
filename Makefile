@@ -32,13 +32,15 @@ base-clean:
 	docker rmi $(DOCKER_REGISTRY)/base || /bin/true
 
 base-build:
-	docker-compose build base
+	docker build -f base/Dockerfile \
+	-t $(DOCKER_REGISTRY)/base \
+	./base
 
 base-push:
-	docker-compose push base
+	docker push $(DOCKER_REGISTRY)/base
 
 base-pull:
-	docker-compose pull base
+	docker pull $(DOCKER_REGISTRY)/base
 
 base: base-clean base-build base-push
 
