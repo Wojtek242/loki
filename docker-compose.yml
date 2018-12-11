@@ -12,6 +12,7 @@ volumes:
   runner_main_home:
   runner_docker_etc:
   runner_docker_home:
+  docker_dind_lib:
 
 services:
 
@@ -141,6 +142,7 @@ services:
     image: docker:dind
     volumes:
       - ./runner/docker/hosts:/etc/hosts
+      - docker_dind_lib:/var/lib/docker
     privileged: true
     restart: always
 
