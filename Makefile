@@ -79,24 +79,6 @@ proxy-pull:
 proxy: proxy-clean proxy-build proxy-push
 
 # -----------------------------------------------------------------------------
-# certbot
-# -----------------------------------------------------------------------------
-
-certbot-clean:
-	docker rmi $(DOCKER_REGISTRY)/certbot || /bin/true
-
-certbot-build:
-	docker-compose build certbot
-
-certbot-push:
-	docker-compose push certbot
-
-certbot-pull:
-	docker-compose pull certbot
-
-certbot: certbot-clean certbot-build certbot-push
-
-# -----------------------------------------------------------------------------
 # runners
 # -----------------------------------------------------------------------------
 
@@ -184,7 +166,6 @@ clean-builds: \
 	wiki-clean \
 	nextcloud-clean \
 	proxy-clean \
-	certbot-clean \
 	runner-base-clean \
 	runner-main-clean \
 	runner-docker-clean

@@ -4,8 +4,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -y upgrade
 
 # Add files to setup GitLab repo
-ADD script.deb.sh /tmp/script.deb.sh
-ADD pin-gitlab-runner.pref /etc/apt/preferences.d/pin-gitlab-runner.pref
+COPY script.deb.sh /tmp/script.deb.sh
+COPY pin-gitlab-runner.pref /etc/apt/preferences.d/pin-gitlab-runner.pref
 
 # Install gitlab-runner
 RUN apt-get -y install gnupg2 && bash /tmp/script.deb.sh && apt-get -y install gitlab-runner

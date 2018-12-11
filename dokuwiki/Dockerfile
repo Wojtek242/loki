@@ -43,8 +43,8 @@ RUN rm -rf $HTML_PATH && \
     mv $HTML_PATH/conf $DOKU_VOL/conf && \
     ln -s $DOKU_VOL/conf $HTML_PATH/conf
 
-ADD nginx-conf.d /etc/nginx/conf.d
-ADD supervisord.conf /etc/supervisord.conf
+COPY nginx-conf.d /etc/nginx/conf.d
+COPY supervisord.conf /etc/supervisord.conf
 
 EXPOSE 80
 VOLUME ["$DOKU_VOL"]
