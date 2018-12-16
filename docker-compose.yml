@@ -122,7 +122,6 @@ services:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy/nginx-conf.d:/etc/nginx/conf.d:ro
       - letsencrypt:/etc/letsencrypt
-      - proxy_html:/var/www/html
     restart: always
 
   # ---------------------------------------------------------------------------
