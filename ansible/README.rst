@@ -47,4 +47,4 @@ To provision the server
 
 ::
 
-   ansible-playbook --vault-id @prompt loki.yml
+   ansible-playbook --vault-id @prompt main.yml
