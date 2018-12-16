@@ -1,0 +1,27 @@
+---
+- hosts: server
+
+  gather_facts: no
+
+  vars_files:
+    - secrets.yml
+
+  pre_tasks:
+    - name: Use default SSH port
+      set_fact:
+        ansible_port: 22
+
+  tasks:
+    - name: Copy sshd config
+      template:
+        src: ./etc/ssh/sshd_config.j2
+        dest: /etc/ssh/sshd_config
+        mode: 0644
+      register: sshd_cfg
+
+    - name: Restart SSH daemon
+      service:
+        name: sshd
+        state: restarted
+        enabled: yes
+      when: sshd_cfg is changed

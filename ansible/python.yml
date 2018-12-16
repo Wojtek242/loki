@@ -1,0 +1,16 @@
+---
+- hosts: server
+
+  gather_facts: no
+
+  vars_files:
+    - secrets.yml
+
+  pre_tasks:
+    - name: Use default SSH port
+      set_fact:
+        ansible_port: 22
+
+  tasks:
+    - name: Install python2
+      raw: apt-get -y install python

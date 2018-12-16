@@ -1,0 +1,24 @@
+[DEFAULT]
+
+# Setup email settings
+sender = {{ fail2ban_sender }}
+
+# Receive mail alerts
+action = %(action_mw)s
+
+# Chain variable needs to be overridden in jail.local,
+# as the uppercase `chain = INPUT` declaration in jail.conf
+# shadows proper lowercase declaration in nftables-common.conf
+chain = input
+
+# Use nftables instead of iptables
+banaction = nftables-multiport
+banaction_allports = nftables-allports
+
+[sshd]
+enabled = true
+port = {{ ansible_port }}
+
+[postfix]
+enabled = true
+postfix_log = %(syslog_mail)s

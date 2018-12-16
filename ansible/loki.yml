@@ -1,0 +1,356 @@
+---
+- hosts: server
+
+  vars_files:
+    - secrets.yml
+
+  vars:
+    - debian_release: stretch
+    - loki_dir: /srv/loki
+
+  tasks:
+
+    # -------------------------------------------------------------------------
+    # Update and upgrade.
+    # -------------------------------------------------------------------------
+
+    - name: Update and upgrade apt packages
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400 #One day
+        force_apt_get: yes
+      register: apt_update
+
+    # Once ansible 2.7 is available will be able to just use reboot module.
+    - block:
+        - name: Reboot
+          shell: "sleep 1 && reboot"
+          async: 1
+          poll: 0
+
+        - name: Wait for host to come back up
+          wait_for_connection:
+            connect_timeout: 20
+            sleep: 5
+            delay: 5
+            timeout: 300
+
+      when: apt_update is changed
+
+    # -------------------------------------------------------------------------
+    # Apparmor.
+    # -------------------------------------------------------------------------
+
+    - name: Install apparmor, utilities, and profiles
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - apparmor
+        - apparmor-utils
+        - apparmor-profiles
+        - apparmor-profiles-extra
+      register: apparmor
+
+    - name: Ensure /etc/default/grub.d exists
+      file:
+        path: /etc/default/grub.d
+        state: directory
+        mode: 0755
+
+    - name: Enable apparmor
+      template:
+        src: ./etc/default/grub.d/apparmor.cfg.j2
+        dest: /etc/default/grub.d/apparmor.cfg
+        mode: 0644
+      register: apparmor_cfg
+
+    # Once ansible 2.7 is available will be able to just use reboot module.
+    - block:
+        - name: Update grub
+          command: update-grub
+
+        - name: Reboot
+          shell: "sleep 1 && reboot"
+          async: 1
+          poll: 0
+
+        - name: Wait for host to come back up
+          wait_for_connection:
+            connect_timeout: 20
+            sleep: 5
+            delay: 5
+            timeout: 300
+
+      when:
+        apparmor is changed or
+        apparmor_cfg is changed
+
+    # -------------------------------------------------------------------------
+    # Firewall.
+    # -------------------------------------------------------------------------
+
+    - name: Install nftables
+      apt:
+        name: nftables
+      register: nftables
+
+    - name: Configure nftables
+      template:
+        src: ./etc/nftables.conf.j2
+        dest: /etc/nftables.conf
+        mode: 0644
+      register: nftables_cfg
+
+    - name: Enable and restart nftables
+      service:
+        name: nftables
+        state: restarted
+        enabled: yes
+      when:
+        nftables is changed or
+        nftables_cfg is changed
+
+    # -------------------------------------------------------------------------
+    # Postfix.
+    # -------------------------------------------------------------------------
+
+    - name: Install postfix
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - postfix
+        - ca-certificates
+        - libsasl2-modules
+      register: postfix
+
+    - name: Configure credentials
+      template:
+        src: ./etc/postfix/sasl_passwd.j2
+        dest: /etc/postfix/sasl_passwd
+        mode: 0600
+      register: postfix_cred
+
+    - name: Configure mailname
+      template:
+        src: ./etc/mailname.j2
+        dest: /etc/mailname
+        mode: 0644
+      register: postfix_mailname
+
+    - name: Configure postfix
+      template:
+        src: ./etc/postfix/main.cf.j2
+        dest: /etc/postfix/main.cf
+        mode: 0644
+      register: postfix_cfg
+
+    - name: Postmap
+      command: postmap /etc/postfix/sasl_passwd
+      when:
+        postfix_cred is changed or
+        postfix_mailname is changed
+
+    - name: Change DB permissions
+      file:
+        path: /etc/postfix/sasl_passwd.db
+        mode: 0600
+
+    - name: Set root alias
+      template:
+        src: ./etc/aliases.j2
+        dest: /etc/aliases
+        mode: 0644
+      register: postfix_aliases
+
+    - name: Update aliases
+      command: newaliases
+      when: postfix_aliases is changed
+
+    - name: Enable and restart postfix
+      service:
+        name: postfix
+        state: restarted
+        enabled: yes
+      when:
+        postfix is changed or
+        postfix_cred is changed or
+        postfix_mailname is changed or
+        postfix_cfg is changed or
+        postfix_aliases is changed
+
+    # -------------------------------------------------------------------------
+    # Fail2Ban.
+    # -------------------------------------------------------------------------
+
+    - name: Install fail2ban
+      apt:
+        name: fail2ban
+      register: fail2ban
+
+    - name: Configure fail2ban
+      template:
+        src: ./etc/fail2ban/jail.d/jail.local.j2
+        dest: /etc/fail2ban/jail.d/jail.local
+        mode: 0644
+      register: fail2ban_cfg
+
+    - name: Enable and restart fail2ban
+      service:
+        name: fail2ban
+        state: restarted
+        enabled: yes
+      when:
+        fail2ban is changed or
+        fail2ban_cfg is changed
+
+    # -------------------------------------------------------------------------
+    # Logcheck and Logrotate.
+    # -------------------------------------------------------------------------
+
+    - name: Install logcheck and logrotate
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - logcheck
+        - logrotate
+
+    - name: Configure logcheck
+      template:
+        src: ./etc/logcheck/ignore.d.server/local-server.j2
+        dest: /etc/logcheck/ignore.d.server/local-server
+        mode: 0644
+
+    # -------------------------------------------------------------------------
+    # Chkrootkit and Rkhunter.
+    # -------------------------------------------------------------------------
+
+    - name: Install rkhunter and chkrootkit
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - rkhunter
+        - chkrootkit
+
+    - name: Configure rkhunter
+      template:
+        src: ./etc/rkhunter.conf.j2
+        dest: /etc/rkhunter.conf
+        mode: 0644
+
+    - name: Configure rkhunter
+      template:
+        src: ./etc/default/rkhunter.j2
+        dest: /etc/default/rkhunter
+        mode: 0644
+
+    - name: Configure chkrootkit
+      template:
+        src: ./etc/chkrootkit.conf.j2
+        dest: /etc/chkrootkit.conf
+        mode: 0644
+
+    # -------------------------------------------------------------------------
+    # Docker CE.
+    # -------------------------------------------------------------------------
+
+    - name: Install packages to enable HTTPS repository
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg2
+        - software-properties-common
+
+    - name: Add Docker GPG key
+      apt_key:
+        id: 0EBFCD88
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/debian "{{ debian_release }}" stable
+        state: present
+      register: docker_repo
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+      when: docker_repo is changed
+
+    - name: Install docker-ce and docker-compose
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - docker-ce
+        - docker-compose
+
+    # -------------------------------------------------------------------------
+    # Loki server.
+    # -------------------------------------------------------------------------
+
+    - name: Install git
+      apt:
+        name: git
+
+    - name: Clone Loki repo
+      git:
+        repo: https://github.com/Wojtek242/loki.git
+        dest: "{{ loki_dir }}"
+      register: loki_git
+
+    - block:
+        - name: Install Loki service
+          command: cp "{{ loki_dir }}"/loki-server.service /lib/systemd/system/
+
+        - name: Update service file
+          lineinfile:
+            path: /lib/systemd/system/loki-server.service
+            regexp: '^WorkingDirectory='
+            line: 'WorkingDirectory={{ loki_dir }}'
+
+        - name: Reload systemd daemon
+          systemd:
+            daemon_reload: yes
+
+        - block:
+            - name: Update
+              command: ./update.sh
+              args:
+                chdir: "{{ loki_dir }}"
+          rescue:
+            - debug:
+                msg: "Failed to pull containers from registry - will build locally"
+
+      when: loki_git is changed
+
+    # Hosts file must be added after the first update as otherwise the initial
+    # container pull will always fail
+    - name: Add hosts file
+      template:
+        src: ./etc/hosts.j2
+        dest: /etc/hosts
+        mode: 0644
+
+    - name: Ensure service is started
+      service:
+        name: loki-server
+        state: started
+        enabled: yes
+
+    # -------------------------------------------------------------------------
+    # Update rkhunter and chkrootkit databases.
+    # -------------------------------------------------------------------------
+
+    - name: Update rkhunter database
+      command: rkhunter --propupd
+
+    - name: Run chkrootkit
+      command: /etc/cron.daily/chkrootkit
+
+    - name: Update chkrootkit logs
+      command: cp -a /var/log/chkrootkit/log.today /var/log/chkrootkit/log.expected
