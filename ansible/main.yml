@@ -222,6 +222,71 @@
         mode: 0644
 
     # -------------------------------------------------------------------------
+    # Process accounting.
+    # -------------------------------------------------------------------------
+
+    - name: Install acct
+      apt:
+        name: acct
+      register: acct
+
+    - name: Switch on process accounting
+      command: accton on
+      when: acct is changed
+
+    # -------------------------------------------------------------------------
+    # System performance monitor.
+    # -------------------------------------------------------------------------
+
+    - name: Install sysstat
+      apt:
+        name: sysstat
+      register: sysstat
+
+    - name: Configure sysstat
+      template:
+        src: ./etc/default/sysstat.j2
+        dest: /etc/default/sysstat
+        mode: 0644
+      register: sysstat_cfg
+
+    - block:
+        - name: Start sysstat
+          command: /etc/init.d/sysstat start
+
+        - name: Set sysstat defaults
+          command: update-rc.d sysstat defaults
+
+      when:
+        sysstat is changed or
+        sysstat_cfg is changed
+
+    # -------------------------------------------------------------------------
+    # Auditing.
+    # -------------------------------------------------------------------------
+
+    - name: Install auditd
+      apt:
+        name: auditd
+      register: auditd
+
+    - name: Configure auditd
+      template:
+        src: ./etc/audit/rules.d/custom.rules.j2
+        dest: /etc/audit/rules.d/custom.rules
+        mode: 0644
+      register: auditd_cfg
+
+    - name: Enable and restart auditd
+      service:
+        name: auditd
+        state: restarted
+        enabled: yes
+      when:
+        auditd is changed or
+        auditd_cfg is changed
+
+    # -------------------------------------------------------------------------
     # Chkrootkit and Rkhunter.
     # -------------------------------------------------------------------------
 
