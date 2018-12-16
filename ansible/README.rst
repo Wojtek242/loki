@@ -13,7 +13,7 @@ Usage
 
 Before any provisioning
 
-1. Copy ``secrets.def.yml`` to ``secrets.yml`` and fill out all the variables.
+1. Copy ``secrets.def.yml`` to ``secrets.yml`` and fill out all the variables
 2. Encrypt the file with
 
 ::
@@ -37,13 +37,13 @@ To provision the server
 
    ansible-playbook --vault-id @prompt python.yml
 
-2. Configure the SSH daemon with a new port number and better security options.
+2. Configure the SSH daemon with a new port number and better security options
 
 ::
 
    ansible-playbook --vault-id @prompt ssh.yml
 
-3. Run the remaining setup.
+3. Run the remaining setup
 
 ::
 
