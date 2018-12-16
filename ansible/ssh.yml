@@ -9,7 +9,7 @@
   pre_tasks:
     - name: Use default SSH port
       set_fact:
-        ansible_port: 22
+        ansible_port: "{{ default_ssh_port }}"
 
   tasks:
     - name: Copy sshd config
