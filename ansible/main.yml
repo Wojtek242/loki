@@ -391,6 +391,11 @@
             - debug:
                 msg: "Failed to pull containers from registry - will build locally"
 
+            - name: Build locally
+              command: make build-all
+              args:
+                chdir: "{{ loki_dir }}"
+
       when: loki_git is changed
 
     # Hosts file must be added after the first update as otherwise the initial
@@ -415,6 +420,16 @@
       template:
         src: ./etc/motd.j2
         dest: /etc/motd
+        mode: 0644
+
+    # -------------------------------------------------------------------------
+    # Set root's .bashrc file.
+    # -------------------------------------------------------------------------
+
+    - name: Set root .bashrc
+      copy:
+        src: ./root.bashrc
+        dest: /root/.bashrc
         mode: 0644
 
     # -------------------------------------------------------------------------

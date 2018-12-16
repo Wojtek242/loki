@@ -3,7 +3,7 @@ FROM nginx
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -y upgrade
 
-RUN apt -y install \
+RUN apt-get -y install \
         openssl \
         certbot \
         cron \
