@@ -9,6 +9,7 @@ RUN apt-get -y install \
         cron \
         supervisor
 
+RUN mkdir -p /var/www/html
 RUN mkdir /etc/nginx/cert && openssl dhparam -out /etc/nginx/cert/dhparam.pem 2048
 
 COPY certbot.cron /etc/cron.d/certbot
