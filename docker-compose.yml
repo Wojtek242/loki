@@ -8,7 +8,6 @@ volumes:
   gitlab_logs:
   gitlab_data:
   letsencrypt:
-  proxy_html:
   runner_main_etc:
   runner_main_home:
   runner_docker_etc:
