@@ -13,7 +13,7 @@ Usage
 
 Before any provisioning
 
-1. Copy secrets.def.yml to secrets.yml and fill out all the variables.
+1. Copy ``secrets.def.yml`` to ``secrets.yml`` and fill out all the variables.
 2. Encrypt the file with
 
 ::
