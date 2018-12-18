@@ -85,26 +85,6 @@ nextcloud-pull:
 nextcloud: nextcloud-clean nextcloud-build nextcloud-push
 
 # -----------------------------------------------------------------------------
-# dind
-# -----------------------------------------------------------------------------
-
-DIND = $(DOCKER_REGISTRY)/dind
-
-dind-clean:
-	docker rmi $(DIND) || /bin/true
-
-dind-build:
-	docker build -f dind/Dockerfile -t $(DIND) ./dind
-
-dind-push:
-	docker push $(DIND)
-
-dind-pull:
-	docker pull $(DIND)
-
-dind: dind-clean dind-build dind-push
-
-# -----------------------------------------------------------------------------
 # Collect targets.
 # -----------------------------------------------------------------------------
 
@@ -115,26 +95,22 @@ clean-all:
 clean-builds: \
 	proxy-clean \
 	wiki-clean \
-	nextcloud-clean \
-	dind-clean
+	nextcloud-clean
 
 build-all: \
 	proxy-build \
 	wiki-build \
-	nextcloud-build \
-	dind-build
+	nextcloud-build
 
 push-all: \
 	proxy-push \
 	wiki-push \
-	nextcloud-push \
-	dind-push
+	nextcloud-push
 
 pull-all: \
 	proxy-pull \
 	wiki-pull \
-	nextcloud-pull \
-	dind-pull
+	nextcloud-pull
 
 # -----------------------------------------------------------------------------
 # Clean - build - push
