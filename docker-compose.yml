@@ -89,7 +89,7 @@ services:
         registry_nginx['listen_https'] = false
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
-      - 2770:22
+      - '2770:22'
     volumes:
       - gitlab_config:/etc/gitlab
       - gitlab_logs:/var/log/gitlab
