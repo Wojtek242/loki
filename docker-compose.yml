@@ -43,6 +43,7 @@ services:
   nextcloud-db:
     container_name: nextcloud-db
     image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     volumes:
       - nextcloud_db:/var/lib/mysql
     environment:
@@ -71,6 +72,8 @@ services:
       - ./nextcloud/nginx.conf:/etc/nginx/nginx.conf:ro
     volumes_from:
       - nextcloud-app
+    environment:
+      - VIRTUAL_HOST='cloud.wojciechkozlowski.eu'
     restart: always
 
   # ---------------------------------------------------------------------------
