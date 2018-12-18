@@ -3,18 +3,20 @@ variables:
    DOCKER_HOST: tcp://docker:2375/
    DOCKER_DRIVER: overlay2
 services:
-  docker:dind
+  - docker:dind
+
+before_script:
+  - docker login -u $USERNAME -p $PASSWORD registry.wojciechkozlowski.eu
+
+after_script:
+  - docker logout registry.wojciechkozlowski.eu
+  - make clean-all
 
 .builds:
   only:
     - schedules
   tags:
     - docker
-  before_script:
-    - docker login -u $USERNAME -p $PASSWORD registry.wojciechkozlowski.eu
-  after_script:
-    - docker logout registry.wojciechkozlowski.eu
-    - make clean-all
 
 proxy:
   extends: .builds
