@@ -39,4 +39,5 @@ service loki-server start
 
 echo -e "${CYAN}[${SCRIPT}] Remove untagged images${NC}"
 
+docker container prune -f
 docker image prune -f
