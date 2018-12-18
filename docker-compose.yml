@@ -99,6 +99,19 @@ services:
       - ./gitlab/ssh_config:/etc/ssh/ssh_config
     restart: always
 
+  # See https://docs.gitlab.com/ee/ci/docker/using_docker_build.html for how to
+  # register the runner for running docker-in-docker builds. Note the need to
+  # set docker-privileged.
+  runner-0:
+    container_name: runner-0
+    image: gitlab/gitlab-runner
+    volumes:
+      - runner_0_etc:/etc/gitlab-runner
+      - runner_0_home:/home/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+
+
   # ---------------------------------------------------------------------------
   # Reverse proxy served by Nginx.
   # ---------------------------------------------------------------------------
@@ -119,20 +132,4 @@ services:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy/nginx-conf.d:/etc/nginx/conf.d:ro
       - letsencrypt:/etc/letsencrypt
-    restart: always
-
-  # ---------------------------------------------------------------------------
-  # Gitlab runners for CI.
-  # ---------------------------------------------------------------------------
-
-  # See https://docs.gitlab.com/ee/ci/docker/using_docker_build.html for how to
-  # register the runner for running docker-in-docker builds. Note the need to
-  # set docker-privileged.
-  runner-0:
-    container_name: runner-0
-    image: gitlab/gitlab-runner
-    volumes:
-      - runner_0_etc:/etc/gitlab-runner
-      - runner_0_home:/home/gitlab-runner
-      - /var/run/docker.sock:/var/run/docker.sock
     restart: always
