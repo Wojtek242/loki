@@ -39,6 +39,28 @@
       when: apt_update is changed
 
     # -------------------------------------------------------------------------
+    # Loki uses SSDs so use fstrim on a timer.
+    # -------------------------------------------------------------------------
+
+    - name: Copy fstrim service file
+      copy:
+        src: ./etc/systemd/system/fstrim.service
+        dest: /etc/systemd/system/fstrim.service
+        mode: 0644
+
+    - name: Copy fstrim timer file
+      copy:
+        src: ./etc/systemd/system/fstrim.timer
+        dest: /etc/systemd/system/fstrim.timer
+        mode: 0644
+
+    - name: Enable and start fstrim.timer
+      service:
+        name: fstrim.timer
+        state: started
+        enabled: yes
+
+    # -------------------------------------------------------------------------
     # Apparmor.
     # -------------------------------------------------------------------------
 
