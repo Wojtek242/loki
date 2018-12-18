@@ -8,11 +8,7 @@ volumes:
   gitlab_logs:
   gitlab_data:
   letsencrypt:
-  runner_main_etc:
-  runner_main_home:
-  runner_docker_etc:
-  runner_docker_home:
-  docker_dind_lib:
+  runner_0:
 
 services:
 
@@ -93,7 +89,7 @@ services:
         registry_nginx['listen_https'] = false
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
-      - '2770:22'
+      - 2770:22
     volumes:
       - gitlab_config:/etc/gitlab
       - gitlab_logs:/var/log/gitlab
@@ -127,32 +123,13 @@ services:
   # Gitlab runners for CI.
   # ---------------------------------------------------------------------------
 
-  runner-main:
+  # See https://docs.gitlab.com/ee/ci/docker/using_docker_build.html for how to
+  # register the runner for running docker-in-docker builds. Note the need to
+  # set docker-privileged.
+  runner-0:
     container_name: runner-main
-    build: runner/main
-    image: registry.wojciechkozlowski.eu/wojtek/loki/runner-main
+    image: gitlab/gitlab-runner
     volumes:
-      - runner_main_etc:/etc/gitlab-runner
-      - runner_main_home:/home/gitlab-runner
+      - runner_0:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
-    restart: always
-
-  docker-dind:
-    container_name: docker-dind
-    image: docker:dind
-    volumes:
-      - ./runner/docker/hosts:/etc/hosts
-      - docker_dind_lib:/var/lib/docker
-    privileged: true
-    restart: always
-
-  runner-docker:
-    container_name: runner-docker
-    build: runner/docker
-    image: registry.wojciechkozlowski.eu/wojtek/loki/runner-docker
-    links:
-      - docker-dind:docker
-    volumes:
-      - runner_docker_etc:/etc/gitlab-runner
-      - runner_docker_home:/home/gitlab-runner
     restart: always

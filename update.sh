@@ -15,7 +15,7 @@ DIRNAME=$(dirname $SCRIPT)
 
 echo -e "${CYAN}[${SCRIPT}] Pull updated images${NC}"
 
-make -C $DIRNAME pull-all
+make -f $DIRNAME/docker-compose.yml pull
 
 # -----------------------------------------------------------------------------
 # Stop the containers.

@@ -25,20 +25,42 @@ DOCKER_REGISTRY = registry.wojciechkozlowski.eu/wojtek/loki
 default: all
 
 # -----------------------------------------------------------------------------
+# proxy
+# -----------------------------------------------------------------------------
+
+PROXY = $(DOCKER_REGISTRY)/proxy
+
+proxy-clean:
+	docker rmi $(PROXY) || /bin/true
+
+proxy-build:
+	docker build -f proxy/Dockerfile -t $(PROXY) ./proxy
+
+proxy-push:
+	docker push $(PROXY)
+
+proxy-pull:
+	docker pull $(PROXY)
+
+proxy: proxy-clean proxy-build proxy-push
+
+# -----------------------------------------------------------------------------
 # wiki
 # -----------------------------------------------------------------------------
 
+WIKI = $(DOCKER_REGISTRY)/wiki
+
 wiki-clean:
-	docker rmi $(DOCKER_REGISTRY)/wiki || /bin/true
+	docker rmi $(WIKI) || /bin/true
 
 wiki-build:
-	docker-compose build wiki
+	docker build -f dokuwiki/Dockerfile -t $(WIKI) ./dokuwiki
 
 wiki-push:
-	docker-compose push wiki
+	docker push $(WIKI)
 
 wiki-pull:
-	docker-compose pull wiki
+	docker pull $(WIKI)
 
 wiki: wiki-clean wiki-build wiki-push
 
@@ -46,113 +68,21 @@ wiki: wiki-clean wiki-build wiki-push
 # nextcloud
 # -----------------------------------------------------------------------------
 
+NEXTCLOUD = $(DOCKER_REGISTRY)/nextcloud
+
 nextcloud-clean:
-	docker rmi $(DOCKER_REGISTRY)/nextcloud || /bin/true
+	docker rmi $(NEXTCLOUD) || /bin/true
 
 nextcloud-build:
-	docker-compose build nextcloud-app
+	docker build -f nextcloud/Dockerfile -t $(NEXTCLOUD) ./nextcloud
 
 nextcloud-push:
-	docker-compose push nextcloud-app
+	docker push $(NEXTCLOUD)
 
 nextcloud-pull:
-	docker-compose pull nextcloud-app
+	docker pull $(NEXTCLOUD)
 
 nextcloud: nextcloud-clean nextcloud-build nextcloud-push
-
-# -----------------------------------------------------------------------------
-# proxy
-# -----------------------------------------------------------------------------
-
-proxy-clean:
-	docker rmi $(DOCKER_REGISTRY)/proxy || /bin/true
-
-proxy-build:
-	docker-compose build proxy
-
-proxy-push:
-	docker-compose push proxy
-
-proxy-pull:
-	docker-compose pull proxy
-
-proxy: proxy-clean proxy-build proxy-push
-
-# -----------------------------------------------------------------------------
-# runners
-# -----------------------------------------------------------------------------
-
-# base ------------------------------------------------------------------------
-
-runner-base-clean:
-	docker rmi $(DOCKER_REGISTRY)/runner-base || /bin/true
-
-runner-base-build:
-	docker build -f runner/Dockerfile \
-	-t $(DOCKER_REGISTRY)/runner-base \
-	./runner
-
-runner-base-push:
-	docker push $(DOCKER_REGISTRY)/runner-base
-
-runner-base-pull:
-	docker pull $(DOCKER_REGISTRY)/runner-base
-
-runner-base: runner-base-clean runner-base-build runner-base-push
-
-# main ------------------------------------------------------------------------
-
-runner-main-clean:
-	docker rmi $(DOCKER_REGISTRY)/runner-main || /bin/true
-
-runner-main-build: runner-base-build
-	docker-compose build runner-main
-
-runner-main-push:
-	docker-compose push runner-main
-
-runner-main-pull:
-	docker-compose pull runner-main
-
-runner-main: runner-main-clean runner-main-build runner-main-push
-
-# docker ----------------------------------------------------------------------
-
-runner-docker-clean:
-	docker rmi $(DOCKER_REGISTRY)/runner-docker || /bin/true
-
-runner-docker-build: runner-base-build
-	docker-compose build runner-docker
-
-runner-docker-push:
-	docker-compose push runner-docker
-
-runner-docker-pull:
-	docker-compose pull runner-docker
-
-runner-docker: runner-docker-clean runner-docker-build runner-docker-push
-
-# collect ---------------------------------------------------------------------
-
-runners-clean: \
-	runner-base-clean \
-	runner-main-clean \
-	runner-docker-clean
-
-runners-build: \
-	runner-base-build \
-	runner-main-build \
-	runner-docker-build
-
-runners-push: \
-	runner-main-push \
-	runner-docker-push
-
-runners-pull: \
-	runner-main-pull \
-	runner-docker-pull
-
-runners: runners-clean runners-build runners-push
 
 # -----------------------------------------------------------------------------
 # Collect targets.
@@ -163,21 +93,24 @@ clean-all:
 	docker image prune -a -f
 
 clean-builds: \
-	wiki-clean \
-	nextcloud-clean \
 	proxy-clean \
-	runner-base-clean \
-	runner-main-clean \
-	runner-docker-clean
+	wiki-clean \
+	nextcloud-clean
 
-build-all: runner-base-build
-	docker-compose build
+build-all: \
+	proxy-build \
+	wiki-build \
+	nextcloud-build
 
-push-all:
-	docker-compose push
+push-all: \
+	proxy-push \
+	wiki-push \
+	nextcloud-push
 
-pull-all:
-	docker-compose pull
+pull-all: \
+	proxy-pull \
+	wiki-pull \
+	nextcloud-pull
 
 # -----------------------------------------------------------------------------
 # Clean - build - push
