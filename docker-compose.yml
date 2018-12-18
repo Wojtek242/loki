@@ -72,8 +72,6 @@ services:
       - ./nextcloud/nginx.conf:/etc/nginx/nginx.conf:ro
     volumes_from:
       - nextcloud-app
-    environment:
-      - VIRTUAL_HOST='cloud.wojciechkozlowski.eu'
     restart: always
 
   # ---------------------------------------------------------------------------
