@@ -6,6 +6,7 @@ services:
   - docker:dind
 
 before_script:
+  - apk add make
   - docker login -u $USERNAME -p $PASSWORD registry.wojciechkozlowski.eu
 
 after_script:

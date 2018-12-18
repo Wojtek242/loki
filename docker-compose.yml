@@ -127,7 +127,7 @@ services:
   # register the runner for running docker-in-docker builds. Note the need to
   # set docker-privileged.
   runner-0:
-    container_name: runner-main
+    container_name: runner-0
     image: gitlab/gitlab-runner
     volumes:
       - runner_0:/etc/gitlab-runner
