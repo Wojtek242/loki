@@ -3,7 +3,7 @@ variables:
    DOCKER_HOST: tcp://docker:2375/
    DOCKER_DRIVER: overlay2
 services:
-  - docker:dind
+  - registry.wojciechkozlowski.eu/wojtek/loki/dind:latest
 
 before_script:
   - apk add make
@@ -33,3 +33,8 @@ nextcloud:
   extends: .builds
   script:
     - make nextcloud
+
+dind:
+  extends: .builds
+  script:
+    - make dind
