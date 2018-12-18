@@ -8,7 +8,8 @@ volumes:
   gitlab_logs:
   gitlab_data:
   letsencrypt:
-  runner_0:
+  runner_0_etc:
+  runner_0_home:
 
 services:
 
@@ -130,6 +131,7 @@ services:
     container_name: runner-0
     image: gitlab/gitlab-runner
     volumes:
-      - runner_0:/etc/gitlab-runner
+      - runner_0_etc:/etc/gitlab-runner
+      - runner_0_home:/home/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
