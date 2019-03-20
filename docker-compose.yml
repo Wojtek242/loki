@@ -10,6 +10,7 @@ volumes:
   letsencrypt:
   runner_0_etc:
   runner_0_home:
+  shadowsocks:
 
 services:
 
@@ -133,3 +134,16 @@ services:
       - ./proxy/nginx-conf.d:/etc/nginx/conf.d:ro
       - letsencrypt:/etc/letsencrypt
     restart: always
+
+    # -------------------------------------------------------------------------
+    # Shadowsocks server.
+    # -------------------------------------------------------------------------
+
+    shadowsocks:
+      container_name: shadowsocks
+      build: shadowsocks
+      image: registry.wojciechkozlowski.eu/wojtek/loki/shadowsocks
+      ports:
+        - 7698:7698
+      volumes:
+        - shadowsocks:/var/shadowsocks
