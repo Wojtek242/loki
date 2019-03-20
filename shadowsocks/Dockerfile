@@ -12,4 +12,4 @@ ADD config.json $SS_VOL
 EXPOSE 7698
 VOLUME ["$SS_VOL"]
 
-CMD ["sh", "-c", "/usr/bin/ssserver -c $SS_VOL/shadowsocks.json"]
+CMD ["sh", "-c", "/usr/bin/ssserver -c $SS_VOL/config.json"]
