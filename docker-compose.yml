@@ -135,15 +135,16 @@ services:
       - letsencrypt:/etc/letsencrypt
     restart: always
 
-    # -------------------------------------------------------------------------
-    # Shadowsocks server.
-    # -------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # Shadowsocks server.
+  # ---------------------------------------------------------------------------
 
-    shadowsocks:
-      container_name: shadowsocks
-      build: shadowsocks
-      image: registry.wojciechkozlowski.eu/wojtek/loki/shadowsocks
-      ports:
-        - 7698:7698
-      volumes:
-        - shadowsocks:/var/shadowsocks
+  shadowsocks:
+    container_name: shadowsocks
+    build: shadowsocks
+    image: registry.wojciechkozlowski.eu/wojtek/loki/shadowsocks
+    ports:
+      - 7698:7698
+    volumes:
+      - shadowsocks:/var/shadowsocks
+    restart: always
