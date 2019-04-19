@@ -91,16 +91,16 @@ nextcloud: nextcloud-clean nextcloud-build nextcloud-push
 SHADOWSOCKS = $(DOCKER_REGISTRY)/shadowsocks
 
 shadowsocks-clean:
-docker rmi $(SHADOWSOCKS) || /bin/true
+	docker rmi $(SHADOWSOCKS) || /bin/true
 
 shadowsocks-build:
-docker build -f shadowsocks/Dockerfile -t $(SHADOWSOCKS) ./shadowsocks
+	docker build -f shadowsocks/Dockerfile -t $(SHADOWSOCKS) ./shadowsocks
 
 shadowsocks-push:
-docker push $(SHADOWSOCKS)
+	docker push $(SHADOWSOCKS)
 
 shadowsocks-pull:
-docker pull $(SHADOWSOCKS)
+	docker pull $(SHADOWSOCKS)
 
 shadowsocks: shadowsocks-clean shadowsocks-build shadowsocks-push
 
