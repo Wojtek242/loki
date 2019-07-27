@@ -15,6 +15,8 @@ RUN mkdir /etc/nginx/cert && openssl dhparam -out /etc/nginx/cert/dhparam.pem 20
 COPY certbot.cron /etc/cron.d/certbot
 COPY supervisord.conf /etc/supervisord.conf
 
+RUN chmod go-wx /etc/cron.d/certbot
+
 VOLUME ["/etc/letsencrypt"]
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
