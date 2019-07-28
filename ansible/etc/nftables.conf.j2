@@ -18,7 +18,7 @@ table inet filter {
                 ip protocol icmp icmp type { echo-request, destination-unreachable, router-advertisement, time-exceeded, parameter-problem } accept
 
                 # activate the following line to accept common local services
-                tcp dport { 80, 443, {{ ssh_port }}, {{ gitlab_ssh_port }}, {{ shadowsocks_port }} } ct state new accept
+                tcp dport { 80, 443, {{ ssh_port }}, {{ gitlab_ssh_port }} } ct state new accept
 
                 # count and drop any other traffic
                 counter drop

@@ -84,26 +84,6 @@ nextcloud-pull:
 
 nextcloud: nextcloud-clean nextcloud-build nextcloud-push
 
-#------------------------------------------------------------------------------
-# Shadowsocks
-#------------------------------------------------------------------------------
-
-SHADOWSOCKS = $(DOCKER_REGISTRY)/shadowsocks
-
-shadowsocks-clean:
-	docker rmi $(SHADOWSOCKS) || /bin/true
-
-shadowsocks-build:
-	docker build -f shadowsocks/Dockerfile -t $(SHADOWSOCKS) ./shadowsocks
-
-shadowsocks-push:
-	docker push $(SHADOWSOCKS)
-
-shadowsocks-pull:
-	docker pull $(SHADOWSOCKS)
-
-shadowsocks: shadowsocks-clean shadowsocks-build shadowsocks-push
-
 # -----------------------------------------------------------------------------
 # Collect targets.
 # -----------------------------------------------------------------------------
@@ -115,26 +95,22 @@ clean-all:
 clean-builds: \
 	proxy-clean \
 	wiki-clean \
-	nextcloud-clean \
-	shadowsocks-clean
+	nextcloud-clean
 
 build-all: \
 	proxy-build \
 	wiki-build \
-	nextcloud-build \
-	shadowsocks-build
+	nextcloud-build
 
 push-all: \
 	proxy-push \
 	wiki-push \
-	nextcloud-push \
-	shadowsocks-push
+	nextcloud-push
 
 pull-all: \
 	proxy-pull \
 	wiki-pull \
-	nextcloud-pull \
-	shadowsocks-pull
+	nextcloud-pull
 
 # -----------------------------------------------------------------------------
 # Clean - build - push
