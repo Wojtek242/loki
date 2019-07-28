@@ -19,7 +19,8 @@ services:
 
   html:
     container_name: html
-    image: registry.wojciechkozlowski.eu/wojtek/wojciechkozlowski.eu/image
+    build: html
+    image: registry.wojciechkozlowski.eu/wojtek/loki/html
     restart: always
 
   # ---------------------------------------------------------------------------

@@ -25,6 +25,26 @@ DOCKER_REGISTRY = registry.wojciechkozlowski.eu/wojtek/loki
 default: all
 
 # -----------------------------------------------------------------------------
+# html
+# -----------------------------------------------------------------------------
+
+HTML = $(DOCKER_REGISTRY)/html
+
+html-clean:
+	docker rmi $(HTML) || /bin/true
+
+html-build:
+	docker build -f html/Dockerfile -t $(HTML) ./html
+
+html-push:
+	docker push $(HTML)
+
+html-pull:
+	docker pull $(HTML)
+
+html: html-clean html-build html-push
+
+# -----------------------------------------------------------------------------
 # proxy
 # -----------------------------------------------------------------------------
 
@@ -93,21 +113,25 @@ clean-all:
 	docker image prune -a -f
 
 clean-builds: \
+	html-clean \
 	proxy-clean \
 	wiki-clean \
 	nextcloud-clean
 
 build-all: \
+	html-build \
 	proxy-build \
 	wiki-build \
 	nextcloud-build
 
 push-all: \
+	html-push \
 	proxy-push \
 	wiki-push \
 	nextcloud-push
 
 pull-all: \
+	html-pull \
 	proxy-pull \
 	wiki-pull \
 	nextcloud-pull

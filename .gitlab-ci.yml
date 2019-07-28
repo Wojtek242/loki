@@ -19,6 +19,11 @@ after_script:
   tags:
     - docker
 
+html:
+  extends: .builds
+  script:
+    - make html
+
 proxy:
   extends: .builds
   script:
