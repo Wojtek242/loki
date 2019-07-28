@@ -8,12 +8,12 @@ ENV DOKU_VOL /var/dokuwiki-storage
 
 RUN apt-get -y install \
         wget \
-        php7.0-fpm \
-        php7.0-xml \
+        php7.3-fpm \
+        php7.3-xml \
         nginx \
         supervisor
 
-RUN sed -i -e "s|cgi.fix_pathinfo=1|cgi.fix_pathinfo=0|g" /etc/php/7.0/fpm/php.ini && \
+RUN sed -i -e "s|cgi.fix_pathinfo=1|cgi.fix_pathinfo=0|g" /etc/php/7.3/fpm/php.ini && \
     mkdir /run/php
 
 RUN rm -rf /etc/nginx/sites-enabled/* && \
