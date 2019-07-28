@@ -19,9 +19,7 @@ services:
 
   html:
     container_name: html
-    image: nginx
-    volumes:
-      - ./html/html-wojciechkozlowski.eu/:/usr/share/nginx/html/
+    image: registry.wojciechkozlowski.eu/wojtek/wojciechkozlowski.eu/image
     restart: always
 
   # ---------------------------------------------------------------------------
