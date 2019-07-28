@@ -101,8 +101,14 @@ services:
     restart: always
 
   # See https://docs.gitlab.com/ee/ci/docker/using_docker_build.html for how to
-  # register the runner for running docker-in-docker builds. Note the need to
-  # set docker-privileged.
+  # register the runner for running docker-in-docker builds.
+  #
+  # Note the need to set docker-privileged.
+  #
+  # https://gitlab.com/gitlab-org/gitlab-runner/issues/4501
+  # Since docker 19.03 also need to set the following in config.toml:
+  # [[runners]]
+  #   environment = ["DOCKER_TLS_CERTDIR="]
   runner-0:
     container_name: runner-0
     image: gitlab/gitlab-runner
