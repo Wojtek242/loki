@@ -5,7 +5,7 @@
     - secrets.yml
 
   vars:
-    - debian_release: stretch
+    - debian_release: buster
     - loki_dir: /srv/loki
 
   tasks:
@@ -22,20 +22,8 @@
         force_apt_get: yes
       register: apt_update
 
-    # Once ansible 2.7 is available will be able to just use reboot module.
-    - block:
-        - name: Reboot
-          shell: "sleep 1 && reboot"
-          async: 1
-          poll: 0
-
-        - name: Wait for host to come back up
-          wait_for_connection:
-            connect_timeout: 20
-            sleep: 5
-            delay: 5
-            timeout: 300
-
+    - name: Reboot the machine
+      reboot:
       when: apt_update is changed
 
     # -------------------------------------------------------------------------
@@ -61,17 +49,34 @@
         enabled: yes
 
     # -------------------------------------------------------------------------
+    # Set up the exfat file system for the USB flash drive.
+    # -------------------------------------------------------------------------
+
+    - name: Set up exfat
+      apt:
+        name: exfat-fuse
+
+    - name: Create USB mount directory
+      file:
+        path: /media/usb0
+        state: directory
+
+    - name: Ensure USB drive is auto-mounted
+      lineinfile:
+        line: "UUID=64A5-F009                            /media/usb0     exfat   defaults        0       0"
+        dest: "/etc/fstab"
+
+    # -------------------------------------------------------------------------
     # Apparmor.
     # -------------------------------------------------------------------------
 
     - name: Install apparmor, utilities, and profiles
       apt:
-        name: "{{ item }}"
-      with_items:
-        - apparmor
-        - apparmor-utils
-        - apparmor-profiles
-        - apparmor-profiles-extra
+        name:
+          - apparmor
+          - apparmor-utils
+          - apparmor-profiles
+          - apparmor-profiles-extra
       register: apparmor
 
     - name: Ensure /etc/default/grub.d exists
@@ -92,17 +97,8 @@
         - name: Update grub
           command: update-grub
 
-        - name: Reboot
-          shell: "sleep 1 && reboot"
-          async: 1
-          poll: 0
-
-        - name: Wait for host to come back up
-          wait_for_connection:
-            connect_timeout: 20
-            sleep: 5
-            delay: 5
-            timeout: 300
+        - name: Reboot the machine
+          reboot:
 
       when:
         apparmor is changed or
@@ -139,11 +135,10 @@
 
     - name: Install postfix
       apt:
-        name: "{{ item }}"
-      with_items:
-        - postfix
-        - ca-certificates
-        - libsasl2-modules
+        name:
+          - postfix
+          - ca-certificates
+          - libsasl2-modules
       register: postfix
 
     - name: Configure credentials
@@ -232,10 +227,9 @@
 
     - name: Install logcheck and logrotate
       apt:
-        name: "{{ item }}"
-      with_items:
-        - logcheck
-        - logrotate
+        name:
+          - logcheck
+          - logrotate
 
     - name: Configure logcheck
       template:
@@ -314,10 +308,9 @@
 
     - name: Install rkhunter and chkrootkit
       apt:
-        name: "{{ item }}"
-      with_items:
-        - rkhunter
-        - chkrootkit
+        name:
+          - rkhunter
+          - chkrootkit
 
     - name: Configure rkhunter
       template:
@@ -358,13 +351,12 @@
 
     - name: Install packages to enable HTTPS repository
       apt:
-        name: "{{ item }}"
-      with_items:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - gnupg2
-        - software-properties-common
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg2
+          - software-properties-common
 
     - name: Add Docker GPG key
       apt_key:
@@ -386,10 +378,9 @@
 
     - name: Install docker-ce and docker-compose
       apt:
-        name: "{{ item }}"
-      with_items:
-        - docker-ce
-        - docker-compose
+        name:
+          - docker-ce
+          - docker-compose
 
     # -------------------------------------------------------------------------
     # Loki server.
