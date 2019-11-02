@@ -57,7 +57,7 @@ function server_start {
 
     echo -e "${CYAN}[${SCRIPT}] Restart loki-server ${NC}"
 
-    service loki-server start
+    systemctl start loki-server
 
 }
 
@@ -69,7 +69,7 @@ function server_stop {
 
     echo -e "${CYAN}[${SCRIPT}] Stop loki-server ${NC}"
 
-    service loki-server stop
+    systemctl stop loki-server
 
 }
 
