@@ -23,7 +23,7 @@ docker-compose -f $DIRNAME/docker-compose.yml pull
 
 echo -e "${CYAN}[${SCRIPT}] Stop the containers${NC}"
 
-service loki-server stop
+systemctl stop loki-server
 
 # -----------------------------------------------------------------------------
 # Start the containers.
@@ -31,7 +31,7 @@ service loki-server stop
 
 echo -e "${CYAN}[${SCRIPT}] Start the containers${NC}"
 
-service loki-server start
+systemctl start loki-server
 
 # -----------------------------------------------------------------------------
 # Remove untagged images.
