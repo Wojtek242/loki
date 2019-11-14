@@ -1,7 +1,11 @@
 ^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} docker-compose\[[0-9]+\]:
+^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: apt-daily.service: Succeeded.
 ^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: Listening on GnuPG network certificate management daemon.
 ^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: Listening on GnuPG cryptographic agent
 ^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: Closed GnuPG network certificate management daemon.
 ^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: Closed GnuPG cryptographic agent
 ^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: run-docker-runtime\\x2drunc-moby
 ^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} auditd\[[0-9]+\]: Audit daemon rotating log files
+^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} sshd\[[0-9]+\]: Invalid user [[:alnum:]]+ from [.[:digit:]]+ port [[:digit:]]+
+^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} sshd\[[0-9]+\]: Received disconnect from [.[:digit:]]+ port [:[:digit:]]+ Bye Bye \[preauth\]
+^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} sshd\[[0-9]+\]: Disconnected from invalid user [[:alnum:]]+ [.[:digit:]]+ port [[:digit:]]+ \[preauth\]
