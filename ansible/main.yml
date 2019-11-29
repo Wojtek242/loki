@@ -31,14 +31,14 @@
     # -------------------------------------------------------------------------
 
     - name: Copy fstrim service file
-      copy:
-        src: ./etc/systemd/system/fstrim.service
+      template:
+        src: ./etc/systemd/system/fstrim.service.j2
         dest: /etc/systemd/system/fstrim.service
         mode: 0644
 
     - name: Copy fstrim timer file
-      copy:
-        src: ./etc/systemd/system/fstrim.timer
+      template:
+        src: ./etc/systemd/system/fstrim.timer.j2
         dest: /etc/systemd/system/fstrim.timer
         mode: 0644
 
