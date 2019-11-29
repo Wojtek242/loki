@@ -4,10 +4,6 @@
   vars_files:
     - secrets.yml
 
-  vars:
-    - debian_release: buster
-    - loki_dir: /srv/loki
-
   tasks:
 
     # -------------------------------------------------------------------------
@@ -334,103 +330,6 @@
         name: "{{ ansible_ssh_user }}"
         groups: sudo
         append: yes
-
-
-    # -------------------------------------------------------------------------
-    # Docker CE.
-    # -------------------------------------------------------------------------
-
-    - name: Install packages to enable HTTPS repository
-      apt:
-        name:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - gnupg2
-          - software-properties-common
-
-    - name: Add Docker GPG key
-      apt_key:
-        id: 0EBFCD88
-        url: https://download.docker.com/linux/debian/gpg
-        state: present
-
-    - name: Add Docker repository
-      apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/debian "{{ debian_release }}" stable
-        state: present
-      register: docker_repo
-
-    - name: Update apt cache
-      apt:
-        update_cache: yes
-        force_apt_get: yes
-      when: docker_repo is changed
-
-    - name: Install docker-ce and docker-compose
-      apt:
-        name:
-          - docker-ce
-          - docker-compose
-
-    # -------------------------------------------------------------------------
-    # Loki server.
-    # -------------------------------------------------------------------------
-
-    - name: Install git
-      apt:
-        name: git
-
-    - name: Clone Loki repo
-      git:
-        repo: https://github.com/Wojtek242/loki.git
-        dest: "{{ loki_dir }}"
-      register: loki_git
-
-    - block:
-        - name: Install Loki service
-          command: cp "{{ loki_dir }}"/loki-server.service /lib/systemd/system/
-
-        - name: Update service file
-          lineinfile:
-            path: /lib/systemd/system/loki-server.service
-            regexp: '^WorkingDirectory='
-            line: 'WorkingDirectory={{ loki_dir }}'
-
-        - name: Reload systemd daemon
-          systemd:
-            daemon_reload: yes
-
-        - block:
-            - name: Update
-              command: ./update.sh
-              args:
-                chdir: "{{ loki_dir }}"
-
-          rescue:
-            - debug:
-                msg: "Failed to pull containers from registry - will build locally"
-
-            - name: Build locally
-              command: make build-all
-              args:
-                chdir: "{{ loki_dir }}"
-
-      when: loki_git is changed
-
-    # Hosts file must be added after the first update as otherwise the initial
-    # container pull will always fail
-    - name: Add hosts file
-      template:
-        src: ./etc/hosts.j2
-        dest: /etc/hosts
-        mode: 0644
-
-    - name: Ensure service is started
-      service:
-        name: loki-server
-        state: started
-        enabled: yes
 
     # -------------------------------------------------------------------------
     # Set MotD.

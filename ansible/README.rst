@@ -43,8 +43,14 @@ To provision the server
 
    ansible-playbook --vault-id @prompt ssh.yml
 
-3. Setup the bare metal machine
+3. Set up the bare metal machine
 
 ::
 
    ansible-playbook --vault-id @prompt machine.yml
+
+4. Install and start the dockerised ``loki`` server
+
+::
+
+   ansible-playbook --vault-id @prompt loki.yml
