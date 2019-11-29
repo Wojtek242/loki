@@ -43,8 +43,8 @@ To provision the server
 
    ansible-playbook --vault-id @prompt ssh.yml
 
-3. Run the remaining setup
+3. Setup the bare metal machine
 
 ::
 
-   ansible-playbook --vault-id @prompt main.yml
+   ansible-playbook --vault-id @prompt machine.yml
