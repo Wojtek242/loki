@@ -1,11 +1,39 @@
-^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} docker-compose\[[0-9]+\]:
-^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: apt-daily.service: Succeeded.
-^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: Listening on GnuPG network certificate management daemon.
-^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: Listening on GnuPG cryptographic agent
-^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: Closed GnuPG network certificate management daemon.
-^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: Closed GnuPG cryptographic agent
-^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} systemd\[[0-9]+\]: run-docker-runtime\\x2drunc-moby
-^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} auditd\[[0-9]+\]: Audit daemon rotating log files
-^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} sshd\[[0-9]+\]: Invalid user [[:alnum:]]+ from [.[:digit:]]+ port [[:digit:]]+
-^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} sshd\[[0-9]+\]: Received disconnect from [.[:digit:]]+ port [:[:digit:]]+ Bye Bye \[preauth\]
-^[[:alpha:]]{3} [ :[:digit:]]{11} {{ hostname }} sshd\[[0-9]+\]: Disconnected from invalid user [[:alnum:]]+ [.[:digit:]]+ port [[:digit:]]+ \[preauth\]
+^[ :[:alnum:]]{15} {{ hostname }} docker-compose\[[0-9]+\]:
+^[ :[:alnum:]]{15} {{ hostname }} kernel: \[[ .[:digit:]]+\] perf: interrupt took too long \([[:digit:]]+ > [[:digit:]]+\), lowering kernel.perf_event_max_sample_rate to [[:digit:]]+
+^[ :[:alnum:]]{15} {{ hostname }} kernel: \[[ .[:digit:]]+\] Process accounting resumed
+^[ :[:alnum:]]{15} {{ hostname }} rsyslogd:  \[origin software=\"rsyslogd\" swVersion=\"[.[:digit:]]+\" x-pid=\"[[:digit:]]+\" x-info=\"https://www.rsyslog.com\"\] rsyslogd was HUPed
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: apt-daily.service: Succeeded.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: apt-daily-upgrade.service: Succeeded.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: systemd-tmpfiles-clean.service: Succeeded.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: Listening on GnuPG network certificate management daemon.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: Listening on GnuPG cryptographic agent
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: Closed GnuPG network certificate management daemon.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: Closed GnuPG cryptographic agent
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: run-docker-runtime\\x2drunc-moby
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: Starting Daily man-db regeneration...
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: fstrim.service: Succeeded.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: man-db.service: Succeeded.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: Started Daily man-db regeneration.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: logrotate.service: Succeeded.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: packagekit.service: Main process exited, code=killed, status=15/TERM
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: packagekit.service: Succeeded.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: acct.service: Succeeded.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: Starting LSB: process and login accounting...
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: Started LSB: process and login accounting.
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: Stopping LSB: process and login accounting...
+^[ :[:alnum:]]{15} {{ hostname }} systemd\[[0-9]+\]: Stopped LSB: process and login accounting.
+^[ :[:alnum:]]{15} {{ hostname }} acct\[[0-9]+\]: Turning on process accounting, file set to '/var/log/account/pacct'.
+^[ :[:alnum:]]{15} {{ hostname }} acct\[[0-9]+\]: Turning off process accounting.
+^[ :[:alnum:]]{15} {{ hostname }} acct\[[0-9]+\]: Done..
+^[ :[:alnum:]]{15} {{ hostname }} auditd\[[0-9]+\]: Audit daemon rotating log files
+^[ :[:alnum:]]{15} {{ hostname }} dbus-daemon\[[0-9]+\]: \[system\] Activating via systemd: service name='org.freedesktop.PackageKit' unit='packagekit.service' requested by '[:.[:digit:]]+' \(uid=0 pid=[[:digit:]]+ comm=\"/usr/bin/gdbus call --system --dest org.freedeskto\"\)
+^[ :[:alnum:]]{15} {{ hostname }} dbus-daemon\[[0-9]+\]: \[system\] Successfully activated service 'org.freedesktop.PackageKit'
+^[ :[:alnum:]]{15} {{ hostname }} fstrim\[[0-9]+\]: /: [.[:digit:]]+ [KMG]iB ([[:digit:]]+ bytes) trimmed on /dev/md[[:digit:]]
+^[ :[:alnum:]]{15} {{ hostname }} PackageKit: daemon start
+^[ :[:alnum:]]{15} {{ hostname }} PackageKit: daemon quit
+^[ :[:alnum:]]{15} {{ hostname }} runuser: pam_unix\(runuser:session\): session opened for user nobody by \(uid=0\)
+^[ :[:alnum:]]{15} {{ hostname }} runuser: pam_unix\(runuser:session\): session closed for user nobody
+^[ :[:alnum:]]{15} {{ hostname }} sshd\[[0-9]+\]: Invalid user [_-[:alnum:]]+ from [.[:digit:]]+ port [[:digit:]]+
+^[ :[:alnum:]]{15} {{ hostname }} sshd\[[0-9]+\]: Received disconnect from [.[:digit:]]+ port [:[:digit:]]+ Bye Bye \[preauth\]
+^[ :[:alnum:]]{15} {{ hostname }} sshd\[[0-9]+\]: Disconnected from invalid user [_-[:alnum:]]+ [.[:digit:]]+ port [[:digit:]]+ \[preauth\]
+^[ :[:alnum:]]{15} {{ hostname }} sshd\[[0-9]+\]: Connection closed by [.[:digit:]]+ port [[:digit:]]+ \[preauth\]
