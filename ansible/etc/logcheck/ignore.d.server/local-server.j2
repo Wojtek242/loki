@@ -28,7 +28,7 @@
 ^[ :[:alnum:]]{15} {{ hostname }} auditd\[[0-9]+\]: Audit daemon rotating log files
 ^[ :[:alnum:]]{15} {{ hostname }} dbus-daemon\[[0-9]+\]: \[system\] Activating via systemd: service name='org.freedesktop.PackageKit' unit='packagekit.service' requested by '[:.[:digit:]]+' \(uid=0 pid=[[:digit:]]+ comm=\"/usr/bin/gdbus call --system --dest org.freedeskto\"\)
 ^[ :[:alnum:]]{15} {{ hostname }} dbus-daemon\[[0-9]+\]: \[system\] Successfully activated service 'org.freedesktop.PackageKit'
-^[ :[:alnum:]]{15} {{ hostname }} fstrim\[[0-9]+\]: /: [.[:digit:]]+ [KMG]iB ([[:digit:]]+ bytes) trimmed on /dev/md[[:digit:]]
+^[ :[:alnum:]]{15} {{ hostname }} fstrim\[[0-9]+\]: /: [.[:digit:]]+ [KMG]iB \([[:digit:]]+ bytes\) trimmed on /dev/md[[:digit:]]
 ^[ :[:alnum:]]{15} {{ hostname }} PackageKit: daemon start
 ^[ :[:alnum:]]{15} {{ hostname }} PackageKit: daemon quit
 ^[ :[:alnum:]]{15} {{ hostname }} runuser: pam_unix\(runuser:session\): session opened for user nobody by \(uid=0\)
