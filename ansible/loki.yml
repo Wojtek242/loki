@@ -6,7 +6,6 @@
 
   vars:
     - debian_release: buster
-    - loki_dir: /srv/loki
 
   tasks:
 
@@ -62,33 +61,19 @@
       register: loki_git
 
     - block:
-        - name: Install Loki service
-          command: cp "{{ loki_dir }}"/loki-server.service /lib/systemd/system/
+        - name: Update
+          command: ./update.sh
+          args:
+            chdir: "{{ loki_dir }}"
 
-        - name: Update service file
-          lineinfile:
-            path: /lib/systemd/system/loki-server.service
-            regexp: '^WorkingDirectory='
-            line: 'WorkingDirectory={{ loki_dir }}'
+      rescue:
+        - debug:
+            msg: "Failed to pull containers from registry - will build locally"
 
-        - name: Reload systemd daemon
-          systemd:
-            daemon_reload: yes
-
-        - block:
-            - name: Update
-              command: ./update.sh
-              args:
-                chdir: "{{ loki_dir }}"
-
-          rescue:
-            - debug:
-                msg: "Failed to pull containers from registry - will build locally"
-
-            - name: Build locally
-              command: make build-all
-              args:
-                chdir: "{{ loki_dir }}"
+        - name: Build locally
+          command: make build-all
+          args:
+            chdir: "{{ loki_dir }}"
 
       when: loki_git is changed
 
@@ -100,8 +85,46 @@
         dest: /etc/hosts
         mode: 0644
 
-    - name: Ensure service is started
+    # -------------------------------------------------------------------------
+    # Loki server service.
+    # -------------------------------------------------------------------------
+
+    - name: Install Loki server
+      template:
+        src: ./etc/systemd/system/loki-server.service.j2
+        dest: /etc/systemd/system/loki-server.service
+        mode: 0644
+
+    - name: Enable and start Loki server
       service:
         name: loki-server
+        state: started
+        enabled: yes
+
+    # -------------------------------------------------------------------------
+    # Loki backup service.
+    # -------------------------------------------------------------------------
+
+    - name: Create GitLab credentials file
+      template:
+        src: ./gitlab.cred.j2
+        dest: "{{ loki_dir }}/gitlab.cred"
+        mode: 0644
+
+    - name: Install Loki backup service
+      template:
+        src: ./etc/systemd/system/loki-backup.service.j2
+        dest: /etc/systemd/system/loki-backup.service
+        mode: 0644
+
+    - name: Install Loki backup timer
+      template:
+        src: ./etc/systemd/system/loki-backup.timer.j2
+        dest: /etc/systemd/system/loki-backup.timer
+        mode: 0644
+
+    - name: Enable and start Loki backup
+      service:
+        name: loki-backup.timer
         state: started
         enabled: yes

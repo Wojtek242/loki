@@ -3,7 +3,7 @@ Description=Dockerised web server
 After=docker.service
 
 [Service]
-WorkingDirectory=/root/Loki
+WorkingDirectory={{ loki_dir }}
 Environment="COMPOSE_HTTP_TIMEOUT=300"
 ExecStart=/usr/bin/docker-compose up
 ExecStop=/usr/bin/docker-compose down
