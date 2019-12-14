@@ -65,12 +65,8 @@
         enabled: yes
 
     # -------------------------------------------------------------------------
-    # Set up the exfat file system for the USB flash drive.
+    # Set up the USB flash drive.
     # -------------------------------------------------------------------------
-
-    - name: Set up exfat
-      apt:
-        name: exfat-fuse
 
     - name: Create USB mount directory
       file:
@@ -79,7 +75,7 @@
 
     - name: Ensure USB drive is auto-mounted
       lineinfile:
-        line: "UUID=64A5-F009                            /media/usb0     exfat   defaults        0       0"
+        line: "LABEL=Muninn                              /media/usb0     ext4    defaults        0       0"
         dest: "/etc/fstab"
 
     # -------------------------------------------------------------------------
