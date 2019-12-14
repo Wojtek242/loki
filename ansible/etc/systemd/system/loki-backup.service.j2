@@ -6,3 +6,4 @@ WorkingDirectory={{ loki_dir }}
 Type=oneshot
 ExecStartPre={{ loki_dir }}/registry-cleaner.sh
 ExecStart={{ loki_dir }}/backup.sh -b
+ExecStartPost={{ loki_dir }}/b2-backup.sh

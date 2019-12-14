@@ -58,27 +58,15 @@
       git:
         repo: https://github.com/Wojtek242/loki.git
         dest: "{{ loki_dir }}"
+        update: no
       register: loki_git
 
-    - block:
-        - name: Update
-          command: ./update.sh
-          args:
-            chdir: "{{ loki_dir }}"
-
-      rescue:
-        - debug:
-            msg: "Failed to pull containers from registry - will build locally"
-
-        - name: Build locally
-          command: make build-all
-          args:
-            chdir: "{{ loki_dir }}"
-
+    - name: Build containers locally
+      command: make build-all
+      args:
+        chdir: "{{ loki_dir }}"
       when: loki_git is changed
 
-    # Hosts file must be added after the first update as otherwise the initial
-    # container pull will always fail
     - name: Add hosts file
       template:
         src: ./etc/hosts.j2
@@ -105,10 +93,20 @@
     # Loki backup service.
     # -------------------------------------------------------------------------
 
+    - name: Install duplicity
+      apt:
+        name: duplicity
+
     - name: Create GitLab credentials file
       template:
         src: ./gitlab.cred.j2
         dest: "{{ loki_dir }}/gitlab.cred"
+        mode: 0644
+
+    - name: Create B2 credentials file
+      template:
+        src: ./b2.cred.j2
+        dest: "{{ loki_dir }}/b2.cred"
         mode: 0644
 
     - name: Install Loki backup service

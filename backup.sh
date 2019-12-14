@@ -11,6 +11,8 @@ NC='\033[00m'
 SCRIPT=$(readlink -f $0)
 DIRNAME=$(dirname $SCRIPT)
 
+BACKUP_DIR="/media/usb0/backup"
+
 # -----------------------------------------------------------------------------
 # Get the list of volumes.
 # -----------------------------------------------------------------------------
@@ -81,6 +83,15 @@ function backup {
 
     volumes=$1
 
+    # Remove old backup directory
+    if [ ! -d ${BACKUP_DIR} ]; then
+        rm -f ${BACKUP_DIR}/*.tar
+        rmdir ${BACKUP_DIR}
+    fi
+
+    # Make sure directory exists
+    mkdir ${BACKUP_DIR}
+
     for vol in "${volumes[@]}"
     do
         echo -e "${CYAN}[${SCRIPT}] Back up ${YELLOW}${vol}${CYAN} volume${NC}"
@@ -88,7 +99,7 @@ function backup {
         set -o xtrace
         docker run --rm \
                -v loki_${vol}:/opt/${vol} \
-               -v /media/usb0:/opt/backup \
+               -v ${BACKUP_DIR}:/opt/backup \
                debian:stable-slim \
                bash -c "cd /opt/${vol} && tar cf /opt/backup/${vol}.tar ."
         set +o xtrace
@@ -111,7 +122,7 @@ function restore {
         set -o xtrace
         docker run --rm \
                -v loki_${vol}:/opt/${vol} \
-               -v /media/usb0:/opt/backup \
+               -v ${BACKUP_DIR}:/opt/backup \
                debian:stable-slim \
                bash -c "cd /opt/${vol} && tar xf /opt/backup/${vol}.tar"
         set +o xtrace
