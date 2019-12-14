@@ -88,7 +88,7 @@ function backup {
         set -o xtrace
         docker run --rm \
                -v loki_${vol}:/opt/${vol} \
-               -v /srv/backup:/opt/backup \
+               -v /media/usb0:/opt/backup \
                debian:stable-slim \
                bash -c "cd /opt/${vol} && tar cf /opt/backup/${vol}.tar ."
         set +o xtrace
@@ -111,7 +111,7 @@ function restore {
         set -o xtrace
         docker run --rm \
                -v loki_${vol}:/opt/${vol} \
-               -v /srv/backup:/opt/backup \
+               -v /media/usb0:/opt/backup \
                debian:stable-slim \
                bash -c "cd /opt/${vol} && tar xf /opt/backup/${vol}.tar"
         set +o xtrace
