@@ -5,6 +5,11 @@ set -e
 CYAN='\033[01;36m'
 NC='\033[00m'
 
+if [ -t 1 ]; then
+    CYAN=''
+    NC=''
+fi
+
 SCRIPT=$(readlink -f $0)
 DIRNAME=$(dirname $SCRIPT)
 
