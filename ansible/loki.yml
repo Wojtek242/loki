@@ -97,6 +97,10 @@
       apt:
         name: duplicity
 
+    - name: Install B2 backend for duplicity
+      pip:
+        name: b2
+
     - name: Create GitLab credentials file
       template:
         src: ./gitlab.cred.j2

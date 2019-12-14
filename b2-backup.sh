@@ -9,6 +9,11 @@ export PASSPHRASE=${GPG_PASSPHRASE}
 # Local directory to backup
 LOCAL_DIR="/media/usb0/backup"
 
+# Remove files older than 30 days
+duplicity remove-older-than 30D --force \
+          --encrypt-sign-key $GPG_KEY \
+          b2://${B2_ACCOUNT}:${B2_KEY}@${B2_BUCKET}
+
 # Perform a full backup
 duplicity full \
           --encrypt-sign-key $GPG_KEY \
