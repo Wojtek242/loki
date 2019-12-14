@@ -3,8 +3,6 @@
 set -e
 
 CYAN='\033[01;36m'
-YELLOW='\033[01;33m'
-RED='\033[01;31m'
 NC='\033[00m'
 
 SCRIPT=$(readlink -f $0)
@@ -17,9 +15,11 @@ DIRNAME=$(dirname $SCRIPT)
 echo -e "${CYAN}[${SCRIPT}] Soft delete untagged images ${NC}"
 
 install="pip3 install gitlab-registry-cleanup"
-cleanup="gitlab-registry-cleanup -g https://gitlab.wojciechkozlowski.eu -r https://registry.wojciechkozlowski.eu -u wojtek"
+cleanup="gitlab-registry-cleanup -g https://gitlab.wojciechkozlowski.eu -r https://registry.wojciechkozlowski.eu -c /gitlab.cred"
 
-docker run -it --rm --volumes-from gitlab python bash -c "${install} && ${cleanup}"
+docker run -it --rm --volumes-from gitlab \
+       -v ${DIRNAME}/gitlab.cred:/gitlab.cred \
+       python bash -c "${install} && ${cleanup}"
 
 # -----------------------------------------------------------------------------
 # Garbage collect and hard delete untagged images.
