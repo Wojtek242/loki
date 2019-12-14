@@ -12,7 +12,9 @@ DIRNAME=$(dirname $SCRIPT)
 # Soft delete untagged images.
 # -----------------------------------------------------------------------------
 
-echo -e "${CYAN}[${SCRIPT}] Soft delete untagged images ${NC}"
+if [ -t 1 ]; then
+    echo -e "${CYAN}[${SCRIPT}] Soft delete untagged images ${NC}"
+fi
 
 install="pip3 install gitlab-registry-cleanup"
 cleanup="gitlab-registry-cleanup -g https://gitlab.wojciechkozlowski.eu -r https://registry.wojciechkozlowski.eu -c /gitlab.cred"
@@ -25,6 +27,8 @@ docker run -it --rm --volumes-from gitlab \
 # Garbage collect and hard delete untagged images.
 # -----------------------------------------------------------------------------
 
-echo -e "${CYAN}[${SCRIPT}] Garbage collect untagged images ${NC}"
+if [ -t 1 ]; then
+    echo -e "${CYAN}[${SCRIPT}] Garbage collect untagged images ${NC}"
+fi
 
 docker exec gitlab bash -c "gitlab-ctl registry-garbage-collect"
