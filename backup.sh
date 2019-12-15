@@ -92,7 +92,7 @@ function backup {
     volumes=$1
 
     # Remove old backup directory
-    if [ ! -d ${BACKUP_DIR} ]; then
+    if [ -d ${BACKUP_DIR} ]; then
         rm -f ${BACKUP_DIR}/*.tar
         rmdir ${BACKUP_DIR}
     fi
