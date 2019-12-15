@@ -29,11 +29,6 @@ proxy:
   script:
     - make proxy
 
-wiki:
-  extends: .builds
-  script:
-    - make wiki
-
 nextcloud:
   extends: .builds
   script:

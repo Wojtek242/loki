@@ -72,26 +72,6 @@ proxy-pull:
 proxy: proxy-clean proxy-build proxy-push
 
 # -----------------------------------------------------------------------------
-# wiki
-# -----------------------------------------------------------------------------
-
-WIKI = $(REGISTRY)/wiki
-
-wiki-clean:
-	$(ENGINE) rmi $(WIKI) || /bin/true
-
-wiki-build:
-	$(ENGINE) build -f dokuwiki/Dockerfile -t $(WIKI) ./dokuwiki
-
-wiki-push:
-	$(ENGINE) push $(WIKI)
-
-wiki-pull:
-	$(ENGINE) pull $(WIKI)
-
-wiki: wiki-clean wiki-build wiki-push
-
-# -----------------------------------------------------------------------------
 # nextcloud
 # -----------------------------------------------------------------------------
 
@@ -122,25 +102,21 @@ clean-all:
 clean-builds: \
 	html-clean \
 	proxy-clean \
-	wiki-clean \
 	nextcloud-clean
 
 build-all: \
 	html-build \
 	proxy-build \
-	wiki-build \
 	nextcloud-build
 
 push-all: \
 	html-push \
 	proxy-push \
-	wiki-push \
 	nextcloud-push
 
 pull-all: \
 	html-pull \
 	proxy-pull \
-	wiki-pull \
 	nextcloud-pull
 
 # -----------------------------------------------------------------------------

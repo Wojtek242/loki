@@ -1,7 +1,6 @@
 version: '2'
 
 volumes:
-  wiki:
   nextcloud:
   nextcloud_db:
   gitlab_config:
@@ -21,18 +20,6 @@ services:
     container_name: html
     build: html
     image: registry.wojciechkozlowski.eu/wojtek/loki/html
-    restart: always
-
-  # ---------------------------------------------------------------------------
-  # DokuWiki installation available at wiki.wojciechkozlowski.eu
-  # ---------------------------------------------------------------------------
-
-  wiki:
-    container_name: wiki
-    build: dokuwiki
-    image: registry.wojciechkozlowski.eu/wojtek/loki/wiki
-    volumes:
-      - wiki:/var/dokuwiki-storage
     restart: always
 
   # ---------------------------------------------------------------------------
@@ -130,7 +117,6 @@ services:
       - 443:443
     links:
       - html
-      - wiki
       - nextcloud
       - gitlab
     volumes:
