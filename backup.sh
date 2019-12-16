@@ -8,7 +8,7 @@ YELLOW='\033[01;33m'
 CYAN='\033[01;36m'
 NC='\033[00m'
 
-if [ -t 1 ]; then
+if [ ! -t 1 ]; then
     RED=''
     GREEN=''
     YELLOW=''
