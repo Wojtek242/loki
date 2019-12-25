@@ -25,12 +25,12 @@ export PASSPHRASE=${GPG_PASSPHRASE}
 LOCAL_DIR="/media/usb0/backup"
 
 # -----------------------------------------------------------------------------
-# Remove files older than 30 days.
+# Remove files older than 15 days.
 # -----------------------------------------------------------------------------
 
-echo -e "${CYAN}[${SCRIPT}] Remove files older than 30 days ${NC}"
+echo -e "${CYAN}[${SCRIPT}] Remove files older than 15 days ${NC}"
 
-duplicity remove-older-than 30D --force \
+duplicity remove-older-than 15D --force \
           --encrypt-sign-key $GPG_KEY \
           b2://${B2_ACCOUNT}:${B2_KEY}@${B2_BUCKET}
 
