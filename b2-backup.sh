@@ -14,6 +14,18 @@ SCRIPT=$(readlink -f $0)
 DIRNAME=$(dirname $SCRIPT)
 
 # -----------------------------------------------------------------------------
+# Run only if it's the first week of the month.
+# -----------------------------------------------------------------------------
+day_of_month=`date '+%d'`
+if (( $day_of_month > 7 ))
+then
+    echo -e "${CYAN}[${SCRIPT}] No B2 backup this week ${NC}"
+    exit 0
+fi
+
+echo -e "${CYAN}[${SCRIPT}] Perform B2 backup ${NC}"
+
+# -----------------------------------------------------------------------------
 # Import all account and GPG variables.
 # -----------------------------------------------------------------------------
 source ./b2.cred
@@ -28,9 +40,9 @@ LOCAL_DIR="/media/usb0/backup"
 # Remove files older than 15 days.
 # -----------------------------------------------------------------------------
 
-echo -e "${CYAN}[${SCRIPT}] Remove files older than 15 days ${NC}"
+echo -e "${CYAN}[${SCRIPT}] Remove files older than 32 days ${NC}"
 
-duplicity remove-older-than 15D --force \
+duplicity remove-older-than 32D --force \
           --encrypt-sign-key $GPG_KEY \
           b2://${B2_ACCOUNT}:${B2_KEY}@${B2_BUCKET}
 
