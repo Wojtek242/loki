@@ -9,6 +9,8 @@ volumes:
   letsencrypt:
   runner_0_etc:
   runner_0_home:
+  runner_tud_etc:
+  runner_tud_home:
 
 services:
 
@@ -103,6 +105,14 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
 
+  runner-tud:
+    container_name: runner-tud
+    image: gitlab/gitlab-runner
+    volumes:
+      - runner_tud_etc:/etc/gitlab-runner
+      - runner_tud_home:/home/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
 
   # ---------------------------------------------------------------------------
   # Reverse proxy served by Nginx.
