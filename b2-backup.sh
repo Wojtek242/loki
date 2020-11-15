@@ -16,7 +16,7 @@ DIRNAME=$(dirname $SCRIPT)
 # -----------------------------------------------------------------------------
 # Run only if it's the first week of the month.
 # -----------------------------------------------------------------------------
-day_of_month=`date '+%d'`
+day_of_month=`date '+%d' | bc`
 if (( $day_of_month > 7 ))
 then
     echo -e "${CYAN}[${SCRIPT}] No B2 backup this week ${NC}"
