@@ -26,11 +26,14 @@ services:
 
   # ---------------------------------------------------------------------------
   # NextCloud installation available at cloud.wojciechkozlowski.eu
+  #
+  # Note about version lock:
+  # https://dba.stackexchange.com/questions/256427/unable-to-create-tables-with-row-format-compressed
   # ---------------------------------------------------------------------------
 
   nextcloud-db:
     container_name: nextcloud-db
-    image: mariadb
+    image: mariadb:10.5
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     volumes:
       - nextcloud_db:/var/lib/mysql
