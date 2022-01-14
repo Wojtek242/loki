@@ -5,7 +5,7 @@
     - secrets.yml
 
   vars:
-    - debian_release: buster
+    - debian_release: bullseye
 
   tasks:
 
