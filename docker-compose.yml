@@ -87,7 +87,6 @@ services:
       - gitlab_config:/etc/gitlab
       - gitlab_logs:/var/log/gitlab
       - gitlab_data:/var/opt/gitlab
-      - ./gitlab/ssh_config:/etc/ssh/ssh_config
     restart: always
 
   # See https://docs.gitlab.com/ee/ci/docker/using_docker_build.html for how to
