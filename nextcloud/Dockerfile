@@ -1,4 +1,4 @@
-FROM nextcloud:fpm
+FROM nextcloud:24-fpm
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -y upgrade
