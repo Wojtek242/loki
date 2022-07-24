@@ -20,7 +20,6 @@ services:
 
   html:
     container_name: html
-    build: html
     image: registry.wojciechkozlowski.eu/wojtek/loki/html
     restart: always
 
@@ -46,7 +45,6 @@ services:
 
   nextcloud-app:
     container_name: nextcloud-app
-    build: nextcloud
     image: registry.wojciechkozlowski.eu/wojtek/loki/nextcloud
     links:
       - nextcloud-db
@@ -122,7 +120,6 @@ services:
 
   proxy:
     container_name: proxy
-    build: proxy
     image: registry.wojciechkozlowski.eu/wojtek/loki/proxy
     ports:
       - 80:80
