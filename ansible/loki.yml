@@ -95,11 +95,9 @@
 
     - name: Install duplicity
       apt:
-        name: duplicity
-
-    - name: Install B2 backend for duplicity
-      pip:
-        name: b2
+        name:
+          - duplicity
+          - python3-b2sdk
 
     - name: Create GitLab credentials file
       template:
